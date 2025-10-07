@@ -14,12 +14,14 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { API_URL } from "../utils/constants";
 import { toast } from "sonner";
+import { useLocation } from "react-router";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { getRecipes, deleteRecipe } from "../utils/api_recipes";
 import { getCategories } from "../utils/api_category";
 
 export default function RecipesPage() {
+  const location = useLocation();
   const [cookies] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
   const { email, token = "" } = currentuser;
@@ -30,17 +32,33 @@ export default function RecipesPage() {
   // to store data from /categories
   const [categories, setCategories] = useState([]);
 
-  // get all ingredients
+  // get all categories
+  useEffect(() => {
+    getCategories().then((data) => setCategories(data));
+  }, []);
+
+  // read category from url
+  useEffect(() => {
+    // category=${category}
+    const params = new URLSearchParams(location.search);
+    const categoryFromURL = params.get("category");
+
+    if (categoryFromURL && categories.length > 0) {
+      const match = categories.find((cat) => cat.name === categoryFromURL);
+      if (match) {
+        setCategory(match._id);
+      }
+    } else {
+      setCategory("All");
+    }
+  }, [location.search, categories]);
+
+  // get all recipes
   useEffect(() => {
     getRecipes(category, ingredients).then((data) => {
       setRecipes(data);
     });
   }, [category, ingredients]);
-
-  // get all categories
-  useEffect(() => {
-    getCategories().then((data) => setCategories(data));
-  }, []);
 
   const handleProductDelete = async (id) => {
     Swal.fire({
@@ -147,9 +165,7 @@ export default function RecipesPage() {
                     {r.name}
                   </Typography>
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    Lizards are a widespread group of squamate reptiles, with
-                    over 6,000 species, ranging across all continents except
-                    Antarctica
+                    {r.instruction.split(" ").slice(0, 15).join(" ")}...
                   </Typography>
                 </CardContent>
                 <CardActions
@@ -159,7 +175,13 @@ export default function RecipesPage() {
                     alignItems: "center",
                   }}
                 >
-                  <Button size="small">View Recipe</Button>
+                  <Button
+                    component={Link}
+                    to={`/recipes/${r._id}`}
+                    size="small"
+                  >
+                    View Recipe
+                  </Button>
                   <Box
                     sx={{
                       display: "flex",

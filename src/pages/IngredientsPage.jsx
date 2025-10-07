@@ -10,6 +10,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { API_URL } from "../utils/constants";
 import { toast } from "sonner";
+import { useLocation } from "react-router";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import {
@@ -20,6 +21,7 @@ import {
 import { addSupply, getSupplies } from "../utils/api_supplies";
 
 export default function IngredientsPage() {
+  const location = useLocation();
   const [cookies] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
   const { email, token = "" } = currentuser;
@@ -27,6 +29,17 @@ export default function IngredientsPage() {
   const [supply, setSupply] = useState([]);
   // to store data from /ingredients
   const [ingredients, setIngredients] = useState([]);
+
+  // read category from url
+  useEffect(() => {
+    // category=${category}
+    const params = new URLSearchParams(location.search);
+    const categoryFromURL = params.get("category");
+
+    if (categoryFromURL) {
+      setCategory(categoryFromURL);
+    }
+  }, [location.search]);
 
   // get all ingredients
   useEffect(() => {
@@ -41,7 +54,6 @@ export default function IngredientsPage() {
       setSupply(data);
     });
   }, []);
-  console.log(supply);
 
   const handleProductDelete = async (id) => {
     Swal.fire({

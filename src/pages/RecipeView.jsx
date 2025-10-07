@@ -21,7 +21,7 @@ import { uploadImage } from "../utils/api_image";
 import { API_URL } from "../utils/constants";
 import { useCookies } from "react-cookie";
 
-export default function RecipeEdit() {
+export default function RecipeView() {
   const navigate = useNavigate();
   const { id } = useParams(); // retrieve the id from the url
   const [cookies] = useCookies(["currentuser"]);
@@ -128,7 +128,7 @@ export default function RecipeEdit() {
         <Container maxWidth="md">
           <Paper elevation={2} sx={{ p: 2 }}>
             <Typography variant="h4" align="center" my={3}>
-              Update Recipe
+              Recipe
             </Typography>
             <Box mb={2}>
               <TextField

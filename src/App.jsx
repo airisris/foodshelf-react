@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import RecipesPage from "./pages/RecipesPage";
+import RecipeView from "./pages/RecipeView";
 import RecipeAdd from "./pages/RecipeAdd";
 import RecipeEdit from "./pages/RecipeEdit";
 import IngredientsPage from "./pages/IngredientsPage";
@@ -22,8 +23,9 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/recipes" element={<RecipesPage />} />
+          <Route path="/recipes/:id" element={<RecipeView />} />
           <Route path="/recipes/new" element={<RecipeAdd />} />
-          <Route path="/recipes/:id/edit" element={<RecipeAdd />} />
+          <Route path="/recipes/:id/edit" element={<RecipeEdit />} />
           <Route path="/ingredients" element={<IngredientsPage />} />
           <Route path="/ingredients/new" element={<IngredientAdd />} />
           <Route path="/ingredients/:id/edit" element={<IngredientEdit />} />

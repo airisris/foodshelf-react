@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Header from "../components/Header";
@@ -13,8 +14,10 @@ import bannerDiwali from "../assets/bannerDiwali.png";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { getIngredients } from "../utils/api_ingredients";
+import { useNavigate } from "react-router";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const [emblaRef] = useEmblaCarousel({ loop: false }, [Autoplay()]);
   const [cookies] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
@@ -24,11 +27,29 @@ export default function HomePage() {
   const [ingredients, setIngredients] = useState([]);
 
   // get all ingredients
-  useEffect(() => {
-    getIngredients(category).then((data) => {
-      setIngredients(data);
-    });
-  }, [category]);
+  // useEffect(() => {
+  //   getIngredients(category).then((data) => {
+  //     setIngredients(data);
+  //   });
+  // }, [category]);
+
+  const handleIngredientsNav = async (category) => {
+    try {
+      // navigate to ingredients page with applied category filter
+      navigate(`/ingredients?category=${category}`);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleRecipesNav = async (category) => {
+    try {
+      // navigate to ingredients page with applied category filter
+      navigate(`/recipes?category=${category}`);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <>
@@ -75,9 +96,10 @@ export default function HomePage() {
                 border: 2,
                 borderColor: "black",
               }}
+              onClick={() => handleIngredientsNav("Fruit")}
             />
             <Typography variant="body1" sx={{ mt: 1 }}>
-              Fruits
+              Fruit
             </Typography>
           </Grid>
           <Grid
@@ -98,9 +120,10 @@ export default function HomePage() {
                 border: 2,
                 borderColor: "black",
               }}
+              onClick={() => handleIngredientsNav("Meat")}
             />
             <Typography variant="body1" sx={{ mt: 1 }}>
-              Meats
+              Meat
             </Typography>
           </Grid>
           <Grid
@@ -121,9 +144,10 @@ export default function HomePage() {
                 border: 2,
                 borderColor: "black",
               }}
+              onClick={() => handleIngredientsNav("Seafood")}
             />
             <Typography variant="body1" sx={{ mt: 1 }}>
-              Seafoods
+              Seafood
             </Typography>
           </Grid>
           <Grid
@@ -144,9 +168,10 @@ export default function HomePage() {
                 border: 2,
                 borderColor: "black",
               }}
+              onClick={() => handleIngredientsNav("Vegetable")}
             />
             <Typography variant="body1" sx={{ mt: 1 }}>
-              Seafoods
+              Vegetable
             </Typography>
           </Grid>
           <Grid
@@ -167,9 +192,10 @@ export default function HomePage() {
                 border: 2,
                 borderColor: "black",
               }}
+              onClick={() => handleIngredientsNav("Dairy Product")}
             />
             <Typography variant="body1" sx={{ mt: 1 }}>
-              Seafoods
+              Dairy Product
             </Typography>
           </Grid>
           <Grid
@@ -190,6 +216,7 @@ export default function HomePage() {
                 border: 2,
                 borderColor: "black",
               }}
+              onClick={() => handleIngredientsNav("All")}
             />
             <Typography variant="body1" sx={{ mt: 1 }}>
               More
@@ -215,9 +242,10 @@ export default function HomePage() {
                 border: 2,
                 borderColor: "black",
               }}
+              onClick={() => handleRecipesNav("Breakfast")}
             />
             <Typography variant="body1" sx={{ mt: 1 }}>
-              Fruits
+              Breakfast
             </Typography>
           </Grid>
           <Grid
@@ -237,9 +265,10 @@ export default function HomePage() {
                 border: 2,
                 borderColor: "black",
               }}
+              onClick={() => handleRecipesNav("Main Course")}
             />
             <Typography variant="body1" sx={{ mt: 1 }}>
-              Meats
+              Main Course
             </Typography>
           </Grid>
           <Grid
@@ -259,9 +288,10 @@ export default function HomePage() {
                 border: 2,
                 borderColor: "black",
               }}
+              onClick={() => handleRecipesNav("Dessert")}
             />
             <Typography variant="body1" sx={{ mt: 1 }}>
-              Seafoods
+              Dessert
             </Typography>
           </Grid>
           <Grid
@@ -281,6 +311,7 @@ export default function HomePage() {
                 border: 2,
                 borderColor: "black",
               }}
+              onClick={() => handleRecipesNav("All")}
             />
             <Typography variant="body1" sx={{ mt: 1 }}>
               More
