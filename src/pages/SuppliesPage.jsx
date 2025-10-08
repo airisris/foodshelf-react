@@ -4,14 +4,17 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Header from "../components/Header";
 import Grid from "@mui/material/Grid";
+import Alert from "@mui/material/Alert";
 import Swal from "sweetalert2";
 import { API_URL } from "../utils/constants";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { getSupplies, deleteSupply } from "../utils/api_supplies";
+import { useNavigate } from "react-router";
 
 export default function SuppliesPage() {
+  const navigate = useNavigate();
   const [cookies] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
   const { email, token = "" } = currentuser;
@@ -22,9 +25,22 @@ export default function SuppliesPage() {
   // get all supplies
   useEffect(() => {
     getSupplies(token).then((data) => {
+      console.log("Supplies data:", data);
       setSupplies(data);
     });
   }, []);
+
+  console.log("supplies state: " + supplies);
+
+  const handleAllSuppliesNav = async (ingredient) => {
+    try {
+      // navigate to ingredients page with applied category filter
+      console.log("ingredient" + ingredient);
+      navigate(`/recipes?category=All&ingredients=${ingredient}`);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const handleRemoveSupply = async (ingredient) => {
     Swal.fire({
@@ -91,45 +107,60 @@ export default function SuppliesPage() {
         </Box>
 
         <Grid container spacing={1} sx={{ m: 4 }}>
-          {supplies.map((s) =>
-            s.ingredient
-              .filter((i) => category === "All" || i.category === category)
-              .map((i) => (
-                <Grid
-                  key={i._id}
-                  size={{ xs: 6, md: 4, lg: 2 }}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box
-                    component="img"
-                    // image={API_URL + i.image}
-                    src={API_URL + i.image}
+          {supplies.some((s) => s.ingredient.length === 0) ? (
+            <Grid
+              size={{ xs: 6, md: 8, lg: 10 }}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Alert severity="info" sx={{ px: 5 }}>
+                No Supplies Found
+              </Alert>
+            </Grid>
+          ) : (
+            supplies.map((s) =>
+              s.ingredient
+                .filter((i) => category === "All" || i.category === category)
+                .map((i) => (
+                  <Grid
+                    key={i._id}
+                    size={{ xs: 6, md: 4, lg: 2 }}
                     sx={{
-                      width: 150,
-                      height: 150,
-                      borderRadius: "10%",
-                      border: 2,
-                      borderColor: "black",
-                    }}
-                  />
-                  <Typography variant="body1" sx={{ mt: 1 }}>
-                    {i.name}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      console.log("Deleting ingredient:", i._id);
-                      handleRemoveSupply(i._id);
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
                     }}
                   >
-                    Remove
-                  </Button>
-                </Grid>
-              ))
+                    <Box
+                      component="img"
+                      // image={API_URL + i.image}
+                      src={API_URL + i.image}
+                      sx={{
+                        width: 150,
+                        height: 150,
+                        borderRadius: "10%",
+                        border: 2,
+                        borderColor: "black",
+                      }}
+                    />
+                    <Typography variant="body1" sx={{ mt: 1 }}>
+                      {i.name}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        console.log("Deleting ingredient:", i._id);
+                        handleRemoveSupply(i._id);
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  </Grid>
+                ))
+            )
           )}
         </Grid>
         <Box
@@ -143,12 +174,18 @@ export default function SuppliesPage() {
           }}
         >
           <Typography>Filter for Recipes:</Typography>
-          <Button variant="contained" sx={{mx: 2}}>
+          <Button
+            variant="contained"
+            sx={{ mx: 2 }}
+            onClick={() =>
+              handleAllSuppliesNav(
+                supplies.map((s) => s.ingredient.map((ing) => ing._id))
+              )
+            }
+          >
             All ingredients
           </Button>
-          <Button variant="contained">
-            Select ingredients
-          </Button>
+          <Button variant="contained">Select ingredients</Button>
         </Box>
       </Box>
     </>

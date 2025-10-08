@@ -3,12 +3,41 @@ import axios from "axios";
 import { API_URL } from "./constants";
 
 export async function getRecipes(category, ingredients) {
-  const response = await axios.get(
-    API_URL +
-      "recipes" +
-      (category === "All" ? "" : "?category=" + category) +
-      (ingredients === "" ? "" : "?ingredients=" + ingredients)
-  );
+  // original url
+  let url = API_URL + "recipes";
+
+  // filter added url
+  const queryParams = {};
+
+  // category filter
+  if (category !== "All") {
+    queryParams.category = category;
+  }
+
+  // // ingredients filter
+  // if (ingredients && ingredients.length > 0) {
+  //   // join the array into a comma-separated string
+  //   queryParams.ingredients = ingredients.join(",");
+  // }
+
+  if (typeof ingredients === "string") {
+    queryParams.ingredients = ingredients;
+  } else if (Array.isArray(ingredients) && ingredients.length > 0) {
+    queryParams.ingredients = ingredients.join(",");
+  }
+
+  // // ingredients filter
+  // if (ingredients !== "") {
+  //   queryParams.ingredients = ingredients;
+  // }
+
+  const queryString = new URLSearchParams(queryParams).toString();
+
+  // add filter to the original url
+  if (queryString) {
+    url += "?" + queryString;
+  }
+  const response = await axios.get(url);
   return response.data;
 }
 

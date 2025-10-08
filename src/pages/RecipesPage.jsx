@@ -11,6 +11,7 @@ import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Alert from "@mui/material/Alert";
 import Swal from "sweetalert2";
 import { API_URL } from "../utils/constants";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { getRecipes, deleteRecipe } from "../utils/api_recipes";
 import { getCategories } from "../utils/api_category";
+import { getIngredients } from "../utils/api_ingredients";
 
 export default function RecipesPage() {
   const location = useLocation();
@@ -26,7 +28,8 @@ export default function RecipesPage() {
   const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
   const { email, token = "" } = currentuser;
   const [category, setCategory] = useState("All");
-  const [ingredients, setIngredients] = useState("");
+  const [ingredients, setIngredients] = useState([]);
+  const [allIngredients, setAllIngredients] = useState("");
   // to store data from /recipes
   const [recipes, setRecipes] = useState([]);
   // to store data from /categories
@@ -35,6 +38,11 @@ export default function RecipesPage() {
   // get all categories
   useEffect(() => {
     getCategories().then((data) => setCategories(data));
+  }, []);
+
+  // get all categories
+  useEffect(() => {
+    getIngredients("All").then((data) => setAllIngredients(data));
   }, []);
 
   // read category from url
@@ -52,6 +60,32 @@ export default function RecipesPage() {
       setCategory("All");
     }
   }, [location.search, categories]);
+
+  console.log("categories: " + categories);
+
+  // read category from url
+  useEffect(() => {
+    // category=${category}
+    const params = new URLSearchParams(location.search);
+    const ingredientsFromURL = params.get("ingredients");
+    console.log("ingredientsFromURL: " + ingredientsFromURL);
+
+    if (ingredientsFromURL && allIngredients.length > 0) {
+      const match = allIngredients.find(
+        (ing) => ing._id === ingredientsFromURL
+      );
+      if (match) {
+        setIngredients(match._id);
+      }
+    } else {
+      null;
+    }
+  }, [location.search, allIngredients]);
+
+  console.log("ingredients: " + ingredients);
+  console.log("all ingredients: " + allIngredients);
+
+  console.log("ingredients value:", ingredients, typeof ingredients);
 
   // get all recipes
   useEffect(() => {
@@ -143,76 +177,94 @@ export default function RecipesPage() {
               <AddIcon />
             </Box>
           </Grid>
-          {recipes.map((r) => (
+          {recipes.length === 0 ? (
             <Grid
-              key={r._id}
-              size={{ xs: 6, md: 4, lg: 3 }}
+              size={{ xs: 6, md: 8, lg: 9 }}
               sx={{
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Card sx={{ maxWidth: 345 }}>
-                <CardMedia
-                  sx={{ height: 200 }}
-                  // image={API_URL + r.image}
-                  component="img"
-                  src={API_URL + r.image}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {r.name}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    {r.instruction.split(" ").slice(0, 15).join(" ")}...
-                  </Typography>
-                </CardContent>
-                <CardActions
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Button
-                    component={Link}
-                    to={`/recipes/${r._id}`}
-                    size="small"
-                  >
-                    View Recipe
-                  </Button>
-                  {currentuser.role === "admin" ? (
-                  <Box
+              <Alert severity="info" sx={{ px: 5 }}>
+                No Recipes Found
+              </Alert>
+            </Grid>
+          ) : (
+            recipes.map((r) => (
+              <Grid
+                key={r._id}
+                size={{ xs: 6, md: 4, lg: 3 }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardMedia
+                    sx={{ height: 200 }}
+                    // image={API_URL + r.image}
+                    component="img"
+                    src={API_URL + r.image}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                      {r.name}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.secondary" }}
+                    >
+                      {r.instruction.split(" ").slice(0, 15).join(" ")}...
+                    </Typography>
+                  </CardContent>
+                  <CardActions
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
                     }}
                   >
-                    <Box
+                    <Button
                       component={Link}
-                      to={`/recipes/${r._id}/edit`}
-                      variant="contained"
-                      sx={{ borderRadius: 5, mx: 2 }}
+                      to={`/recipes/${r._id}`}
+                      size="small"
                     >
-                      <EditIcon fontSize="small" color="info" />
-                    </Box>
-                    <Box
-                      variant="contained"
-                      sx={{ borderRadius: 5 }}
-                      onClick={() => {
-                        handleProductDelete(r._id);
-                      }}
-                    >
-                      <DeleteIcon fontSize="small" color="error" />
-                    </Box>
-                  </Box>
-                  ): null}
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
+                      View Recipe
+                    </Button>
+                    {currentuser.role === "admin" ? (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Box
+                          component={Link}
+                          to={`/recipes/${r._id}/edit`}
+                          variant="contained"
+                          sx={{ borderRadius: 5, mx: 2 }}
+                        >
+                          <EditIcon fontSize="small" color="info" />
+                        </Box>
+                        <Box
+                          variant="contained"
+                          sx={{ borderRadius: 5 }}
+                          onClick={() => {
+                            handleProductDelete(r._id);
+                          }}
+                        >
+                          <DeleteIcon fontSize="small" color="error" />
+                        </Box>
+                      </Box>
+                    ) : null}
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))
+          )}
         </Grid>
       </Box>
     </>

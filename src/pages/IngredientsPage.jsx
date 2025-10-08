@@ -8,6 +8,7 @@ import Chip from "@mui/material/Chip";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Alert from "@mui/material/Alert";
 import Swal from "sweetalert2";
 import { API_URL } from "../utils/constants";
 import { toast } from "sonner";
@@ -112,12 +113,6 @@ export default function IngredientsPage() {
     }
   };
 
-  // console.log(
-  //   recipe.some((r) => r.ingredients.some((ing) => ing._id === i._id)) ||
-  //     supplies.some((s) => s.ingredient.some((ing) => ing._id === i._id))
-  // );
-  console.log(currentuser);
-
   return (
     <>
       <Box sx={{ mx: "50px" }}>
@@ -185,83 +180,98 @@ export default function IngredientsPage() {
               <AddIcon />
             </Box>
           </Grid>
-          {ingredients.map((i) => (
+          {ingredients.length === 0 ? (
             <Grid
-              key={i._id}
-              size={{ xs: 6, md: 4, lg: 2 }}
+              size={{ xs: 6, md: 8, lg: 10 }}
               sx={{
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              <Box
-                component="img"
-                // image={API_URL + i.image}
-                src={API_URL + i.image}
+              <Alert severity="info" sx={{ px: 5 }}>
+                No Ingredients Found
+              </Alert>
+            </Grid>
+          ) : (
+            ingredients.map((i) => (
+              <Grid
+                key={i._id}
+                size={{ xs: 6, md: 4, lg: 2 }}
                 sx={{
-                  width: 150,
-                  height: 150,
-                  borderRadius: "10%",
-                  border: 2,
-                  borderColor: "black",
-                }}
-              />
-              <Box>
-                {currentuser.role === "admin" ? (
-                  recipe.some((r) =>
-                    r.ingredients.some((ing) => ing._id === i._id)
-                  ) ||
-                  supplies.some((s) =>
-                    s.ingredient.some((ing) => ing._id === i._id)
-                  ) ? (
-                    <Chip label="In-use" />
-                  ) : (
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        width: "100%",
-                      }}
-                    >
-                      <Box
-                        component={Link}
-                        to={`/ingredients/${i._id}/edit`}
-                        sx={{ borderRadius: 5 }}
-                      >
-                        <EditIcon fontSize="small" color="info" disabled />
-                      </Box>
-                      <Box
-                        variant="contained"
-                        sx={{ borderRadius: 5 }}
-                        onClick={() => {
-                          handleProductDelete(i._id);
-                        }}
-                      >
-                        <DeleteIcon fontSize="small" color="error" />
-                      </Box>
-                    </Box>
-                  )
-                ) : null}
-                {/* .some() returns true if found at least one match */}
-              </Box>
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                {i.name}
-              </Typography>
-              <Button
-                variant="contained"
-                disabled={supply.find((s) =>
-                  s.ingredient.find((ing) => ing._id === i._id)
-                )}
-                onClick={() => {
-                  handleAddSupply(i._id);
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
                 }}
               >
-                Add To My Supply
-              </Button>
-            </Grid>
-          ))}
+                <Box
+                  component="img"
+                  // image={API_URL + i.image}
+                  src={API_URL + i.image}
+                  sx={{
+                    width: 150,
+                    height: 150,
+                    borderRadius: "10%",
+                    border: 2,
+                    borderColor: "black",
+                  }}
+                />
+                <Box>
+                  {currentuser.role === "admin" ? (
+                    recipe.some((r) =>
+                      r.ingredients.some((ing) => ing._id === i._id)
+                    ) ||
+                    supplies.some((s) =>
+                      s.ingredient.some((ing) => ing._id === i._id)
+                    ) ? (
+                      <Chip label="In-use" />
+                    ) : (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          width: "100%",
+                        }}
+                      >
+                        <Box
+                          component={Link}
+                          to={`/ingredients/${i._id}/edit`}
+                          sx={{ borderRadius: 5 }}
+                        >
+                          <EditIcon fontSize="small" color="info" disabled />
+                        </Box>
+                        <Box
+                          variant="contained"
+                          sx={{ borderRadius: 5 }}
+                          onClick={() => {
+                            handleProductDelete(i._id);
+                          }}
+                        >
+                          <DeleteIcon fontSize="small" color="error" />
+                        </Box>
+                      </Box>
+                    )
+                  ) : null}
+                  {/* .some() returns true if found at least one match */}
+                </Box>
+                <Typography variant="body1" sx={{ mt: 1 }}>
+                  {i.name}
+                </Typography>
+                <Button
+                  variant="contained"
+                  disabled={supply.find((s) =>
+                    s.ingredient.find((ing) => ing._id === i._id)
+                  )}
+                  onClick={() => {
+                    handleAddSupply(i._id);
+                  }}
+                >
+                  Add To My Supply
+                </Button>
+              </Grid>
+            ))
+          )}
         </Grid>
       </Box>
     </>
