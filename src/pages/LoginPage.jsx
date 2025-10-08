@@ -45,35 +45,40 @@ const LoginPage = () => {
 
   return (
     <>
-      <Header current="login" title="Login to Your Account" />
-      <Container maxWidth="sm" sx={{ mt: 3 }}>
-        <Paper variant="outlined" sx={{ p: 2 }}>
-          <Typography>Email</Typography>
-          <Box mb={2}>
-            <TextField
-              label="Email"
-              variant="outlined"
-              fullWidth
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Box>
-          <Typography>Password</Typography>
-          <Box mb={2}>
-            <TextField
-              label="Password"
-              type="password"
-              variant="outlined"
-              fullWidth
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Box>
-          <Button fullWidth variant="contained" onClick={() => handleLogin()}>
-            Login
-          </Button>
-        </Paper>
-      </Container>
+      <Box sx={{ mx: "50px" }}>
+        <Header />
+        <Container maxWidth="sm" sx={{ mt: 3 }}>
+          <Paper variant="outlined" sx={{ p: 2 }}>
+            <Typography variant="h4" align="center" my={3}>
+              Login to Your Account
+            </Typography>
+            <Typography>Email</Typography>
+            <Box mb={2}>
+              <TextField
+                label="Email"
+                variant="outlined"
+                fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Box>
+            <Typography>Password</Typography>
+            <Box mb={2}>
+              <TextField
+                label="Password"
+                type="password"
+                variant="outlined"
+                fullWidth
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Box>
+            <Button fullWidth variant="contained" onClick={() => handleLogin()}>
+              Login
+            </Button>
+          </Paper>
+        </Container>
+      </Box>
     </>
   );
 };

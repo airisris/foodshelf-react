@@ -2,6 +2,16 @@ import axios from "axios";
 
 import { API_URL } from "./constants";
 
+export async function getAllSupplies(token) {
+  const response = await axios.get(API_URL + "supplies/all", {
+    headers: {
+      Authorization: "Bearer " + token,
+      // Bearer k2i30912k3o...
+    },
+  });
+  return response.data;
+}
+
 export async function getSupplies(token) {
   const response = await axios.get(API_URL + "supplies", {
     headers: {

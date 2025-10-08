@@ -32,6 +32,7 @@ export default function IngredientAdd() {
     // 1. check for error
     if (!name || !category || !image) {
       toast.error("Please fill up the required fields");
+      return;
     }
 
     try {

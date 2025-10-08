@@ -50,55 +50,64 @@ const SignupPage = () => {
 
   return (
     <>
-      <Header current="signup" title="Create a New Account" />
-      <Container maxWidth="sm" sx={{ mt: 3 }}>
-        <Paper variant="outlined" sx={{ p: 2 }}>
-          <Typography>Name</Typography>
-          <Box mb={2}>
-            <TextField
-              label="Name"
-              variant="outlined"
+      <Box sx={{ mx: "50px" }}>
+        <Header />
+        <Container maxWidth="sm" sx={{ mt: 3 }}>
+          <Paper variant="outlined" sx={{ p: 2 }}>
+            <Typography variant="h4" align="center" my={3}>
+              Create a New Account
+            </Typography>
+            <Typography>Name</Typography>
+            <Box mb={2}>
+              <TextField
+                label="Name"
+                variant="outlined"
+                fullWidth
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </Box>
+            <Typography>Email</Typography>
+            <Box mb={2}>
+              <TextField
+                label="Email"
+                variant="outlined"
+                fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Box>
+            <Typography>Password</Typography>
+            <Box mb={2}>
+              <TextField
+                label="Password"
+                type="password"
+                variant="outlined"
+                fullWidth
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Box>
+            <Typography>Confirm Password</Typography>
+            <Box mb={2}>
+              <TextField
+                label="Confirm Password"
+                variant="outlined"
+                fullWidth
+                value={cPassword}
+                onChange={(e) => setCPassword(e.target.value)}
+              />
+            </Box>
+            <Button
               fullWidth
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </Box>
-          <Typography>Email</Typography>
-          <Box mb={2}>
-            <TextField
-              label="Email"
-              variant="outlined"
-              fullWidth
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Box>
-          <Typography>Password</Typography>
-          <Box mb={2}>
-            <TextField
-              label="Password"
-              type="password"
-              variant="outlined"
-              fullWidth
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Box>
-          <Typography>Confirm Password</Typography>
-          <Box mb={2}>
-            <TextField
-              label="Confirm Password"
-              variant="outlined"
-              fullWidth
-              value={cPassword}
-              onChange={(e) => setCPassword(e.target.value)}
-            />
-          </Box>
-          <Button fullWidth variant="contained" onClick={() => handleSignUp()}>
-            Sign Up
-          </Button>
-        </Paper>
-      </Container>
+              variant="contained"
+              onClick={() => handleSignUp()}
+            >
+              Sign Up
+            </Button>
+          </Paper>
+        </Container>
+      </Box>
     </>
   );
 };

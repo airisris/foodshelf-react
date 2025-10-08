@@ -7,17 +7,17 @@ export const getCategories = async () => {
   return response.data;
 };
 
-export const createCategory = async (label) => {
+export const createCategory = async (name) => {
   const response = await axios.post(API_URL + "categories", {
-    label,
+    name,
   });
 
   return response.data;
 };
 
-export async function updateCategory(id, label) {
+export async function updateCategory(id, name) {
   const response = await axios.put(API_URL + "categories/" + id, {
-    label,
+    name,
   });
   return response.data;
 }

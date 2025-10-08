@@ -6,6 +6,7 @@ import { Autocomplete, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
+import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -67,30 +68,7 @@ export default function RecipeView() {
       });
   }, [id]);
 
-  const handleFormSubmit = async (event) => {
-    // 1. check for error
-    if (!name || !instruction || !category || !ingredient || !image) {
-      toast.error("Please fill up the required fields");
-    }
-
-    try {
-      // 2. trigger the API to create new recipe
-      await updateRecipe(
-        id,
-        name,
-        instruction,
-        category,
-        ingredient.map((i) => i._id), // send only the ids to the backend
-        image,
-        token
-      );
-      // 3. if successful, redirect user and show success message
-      toast.success("Recipe has been updated");
-      navigate("/recipes");
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
+  const match = categories.find((cat) => cat._id === category);
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -127,113 +105,69 @@ export default function RecipeView() {
         <Header />
         <Container maxWidth="md">
           <Paper elevation={2} sx={{ p: 2 }}>
-            <Typography variant="h4" align="center" my={3}>
-              Recipe
-            </Typography>
-            <Box mb={2}>
-              <TextField
-                label="Name"
-                fullWidth
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Box>
-            <Box mb={2}>
-              <TextField
-                label="Instruction"
-                multiline
-                rows={4}
-                fullWidth
-                value={instruction}
-                onChange={(e) => setInstruction(e.target.value)}
-              />
-            </Box>
-            <Box mb={2}>
-              <FormControl sx={{ width: "100%" }}>
-                <InputLabel
-                  id="demo-simple-select-label"
-                  sx={{ bgcolor: "white", pr: "5px" }}
-                >
-                  Category
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={category}
-                  label="Category"
-                  onChange={(event) => {
-                    setCategory(event.target.value);
-                  }}
-                >
-                  {categories.map((cat) => (
-                    <MenuItem value={cat._id}>{cat.name}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-            <Box mb={2}>
-              <Autocomplete
-                multiple
-                options={ingredients}
-                getOptionLabel={(option) => option.name}
-                value={ingredient}
-                onChange={(e, newValue) => setIngredient(newValue)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Ingredients"
-                    placeholder="Search..."
-                  />
-                )}
-              />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h4" align="center" my={1}>
+                {name}
+              </Typography>
+              {match && <Chip label={match.name} />}
             </Box>
             <Box
-              mb={2}
-              sx={{ display: "flex", gap: "10px", alignItems: "center" }}
+              sx={{
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+                my: 4,
+              }}
             >
-              {image ? (
-                <>
-                  <img src={API_URL + image} width="100px" />
-                  <Button
-                    color="info"
-                    variant="contained"
-                    size="small"
-                    onClick={() => setImage(null)}
-                  >
-                    Remove
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<CloudUploadIcon />}
-                >
-                  Upload image
-                  <VisuallyHiddenInput
-                    type="file"
-                    onChange={async (event) => {
-                      const data = await uploadImage(event.target.files[0]);
-                      // { image_url: "uploads/image.jpg" }
-                      // set the image url into state
-                      setImage(data.image_url);
-                    }}
-                    accept="image/*"
-                  />
-                </Button>
-              )}
-            </Box>
-            <Box mb={2}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={handleFormSubmit}
+              <Box
+                component="img"
+                src={API_URL + image}
+                sx={{
+                  width: 300,
+                  height: 200,
+                  borderRadius: "10%",
+                  border: 2,
+                  borderColor: "black",
+                }}
+              />
+              <Typography
+                variant="h6"
+                align="center"
+                sx={{
+                  textAlign: "start",
+                  pr: "50px",
+                }}
               >
-                Update
-              </Button>
+                Ingredients: <br />{" "}
+                {ingredient.map((ing, index) => (
+                  <Typography key={index}>
+                    {index + 1}. {ing.name}
+                  </Typography>
+                ))}
+              </Typography>
+            </Box>
+            <Typography variant="h6" align="center" sx={{ textAlign: "start" }}>
+              Instruction:
+            </Typography>
+            <Box align="center" sx={{ textAlign: "start" }}>
+              {instruction
+                // split at the numbers eg. 1. 2.
+                .split(/\d+\.\s*/)
+                // remove empty string at the start
+                .filter((i) => i.trim())
+                // show each step with number
+                .map((i, index) => (
+                  <Typography key={i}>
+                    {index + 1}. {i}
+                  </Typography>
+                ))}
             </Box>
           </Paper>
         </Container>

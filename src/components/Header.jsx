@@ -31,28 +31,28 @@ const Header = (props) => {
                 Welcome, {currentuser.name}
               </Typography>
             )}
-            {/* {currentuser ? ( */}
-            <Button
-              variant="outlined"
-              onClick={() => {
-                // remove cookie
-                removeCookie("currentuser");
-                // redirect back to home page
-                navigate("/");
-              }}
-            >
-              Logout
-            </Button>
-            {/* // ) : ( */}
-            <>
-              <Button component={Link} to="/login">
-                Login
+            {currentuser ? (
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  // remove cookie
+                  removeCookie("currentuser");
+                  // redirect back to home page
+                  navigate("/");
+                }}
+              >
+                Logout
               </Button>
-              <Button component={Link} to="/signup">
-                Sign Up
-              </Button>
-            </>
-            {/* // )} */}
+            ) : (
+              <>
+                <Button component={Link} to="/login">
+                  Login
+                </Button>
+                <Button component={Link} to="/signup">
+                  Sign Up
+                </Button>
+              </>
+            )}
           </Box>
         </Box>
         <Box>
@@ -69,6 +69,11 @@ const Header = (props) => {
           <Button component={Link} to="/supplies">
             Supplies
           </Button>
+          {currentuser && currentuser.role === "admin" ? (
+            <Button component={Link} to="/categories">
+              Categories
+            </Button>
+          ) : null}
         </Box>
       </Box>
     </>

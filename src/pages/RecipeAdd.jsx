@@ -46,6 +46,7 @@ export default function RecipeAdd() {
     // 1. check for error
     if (!name || !instruction || !category || !ingredient || !image) {
       toast.error("Please fill up the required fields");
+      return;
     }
 
     try {

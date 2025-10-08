@@ -9,7 +9,7 @@ import { API_URL } from "../utils/constants";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
-import { getSupplies, deleteSupply} from "../utils/api_supplies";
+import { getSupplies, deleteSupply } from "../utils/api_supplies";
 
 export default function SuppliesPage() {
   const [cookies] = useCookies(["currentuser"]);
@@ -93,7 +93,7 @@ export default function SuppliesPage() {
         <Grid container spacing={1} sx={{ m: 4 }}>
           {supplies.map((s) =>
             s.ingredient
-              .filter((i) => (category === "All" || i.category === category))
+              .filter((i) => category === "All" || i.category === category)
               .map((i) => (
                 <Grid
                   key={i._id}
@@ -132,6 +132,24 @@ export default function SuppliesPage() {
               ))
           )}
         </Grid>
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 20,
+            right: 20,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography>Filter for Recipes:</Typography>
+          <Button variant="contained" sx={{mx: 2}}>
+            All ingredients
+          </Button>
+          <Button variant="contained">
+            Select ingredients
+          </Button>
+        </Box>
       </Box>
     </>
   );

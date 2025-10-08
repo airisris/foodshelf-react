@@ -182,6 +182,7 @@ export default function RecipesPage() {
                   >
                     View Recipe
                   </Button>
+                  {currentuser.role === "admin" ? (
                   <Box
                     sx={{
                       display: "flex",
@@ -207,6 +208,7 @@ export default function RecipesPage() {
                       <DeleteIcon fontSize="small" color="error" />
                     </Box>
                   </Box>
+                  ): null}
                 </CardActions>
               </Card>
             </Grid>

@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Header from "../components/Header";
 import Grid from "@mui/material/Grid";
+import Chip from "@mui/material/Chip";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -18,7 +19,8 @@ import {
   getIngredient,
   deleteIngredient,
 } from "../utils/api_ingredients";
-import { addSupply, getSupplies } from "../utils/api_supplies";
+import { getRecipes } from "../utils/api_recipes";
+import { getAllSupplies, addSupply, getSupplies } from "../utils/api_supplies";
 
 export default function IngredientsPage() {
   const location = useLocation();
@@ -27,8 +29,10 @@ export default function IngredientsPage() {
   const { email, token = "" } = currentuser;
   const [category, setCategory] = useState("All");
   const [supply, setSupply] = useState([]);
+  const [recipe, setRecipe] = useState([]);
   // to store data from /ingredients
   const [ingredients, setIngredients] = useState([]);
+  const [supplies, setSupplies] = useState([]);
 
   // read category from url
   useEffect(() => {
@@ -52,6 +56,20 @@ export default function IngredientsPage() {
   useEffect(() => {
     getSupplies(token).then((data) => {
       setSupply(data);
+    });
+  }, []);
+
+  // get everyone's supplies
+  useEffect(() => {
+    getAllSupplies(token).then((data) => {
+      setSupplies(data);
+    });
+  }, []);
+
+  // get all recipes
+  useEffect(() => {
+    getRecipes("All", ingredients).then((data) => {
+      setRecipe(data);
     });
   }, []);
 
@@ -81,34 +99,24 @@ export default function IngredientsPage() {
   const handleAddSupply = async (id) => {
     try {
       const ingredient = await getIngredient(id);
-
-      // // find out if the ingredient already exists in the supply or not
-      // const supplies = await getSupplies("All", token);
-      // supplies.find(
-      //   (s) => {
-      //     console.log(s.ingredient_id);
-      //     return s.ingredient === id
-      //   }
-      // );
-
-      // if (selected) {
-      //   // if already exists, return
-      //   toast.info(
-      //     `"${ingredient.name}" has already been added to your supply`
-      //   );
-      //   return;
-      // } else {
-      // if not exists, add to supply
+      // add to supply
       await addSupply(email, ingredient, token);
       const updatedSupplies = await getSupplies(token);
-      console.log(updatedSupplies);
       setSupply(updatedSupplies);
+      const allSupplies = await getAllSupplies(token);
+      setSupplies(allSupplies);
       toast.success(`"${ingredient.name}" has been added to your supply`);
       // }
     } catch (error) {
       toast.error(error.message);
     }
   };
+
+  // console.log(
+  //   recipe.some((r) => r.ingredients.some((ing) => ing._id === i._id)) ||
+  //     supplies.some((s) => s.ingredient.some((ing) => ing._id === i._id))
+  // );
+  console.log(currentuser);
 
   return (
     <>
@@ -200,34 +208,43 @@ export default function IngredientsPage() {
                 }}
               />
               <Box>
-                {/* {currentuser.role === "admin" ? ( */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    width: "100%",
-                  }}
-                >
-                  <Box
-                    component={Link}
-                    to={`/ingredients/${i._id}/edit`}
-                    variant="contained"
-                    sx={{ borderRadius: 5 }}
-                  >
-                    <EditIcon fontSize="small" color="info" />
-                  </Box>
-                  <Box
-                    variant="contained"
-                    sx={{ borderRadius: 5 }}
-                    onClick={() => {
-                      handleProductDelete(i._id);
-                    }}
-                  >
-                    <DeleteIcon fontSize="small" color="error" />
-                  </Box>
-                </Box>
-                {/* ) : null} */}
+                {currentuser.role === "admin" ? (
+                  recipe.some((r) =>
+                    r.ingredients.some((ing) => ing._id === i._id)
+                  ) ||
+                  supplies.some((s) =>
+                    s.ingredient.some((ing) => ing._id === i._id)
+                  ) ? (
+                    <Chip label="In-use" />
+                  ) : (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <Box
+                        component={Link}
+                        to={`/ingredients/${i._id}/edit`}
+                        sx={{ borderRadius: 5 }}
+                      >
+                        <EditIcon fontSize="small" color="info" disabled />
+                      </Box>
+                      <Box
+                        variant="contained"
+                        sx={{ borderRadius: 5 }}
+                        onClick={() => {
+                          handleProductDelete(i._id);
+                        }}
+                      >
+                        <DeleteIcon fontSize="small" color="error" />
+                      </Box>
+                    </Box>
+                  )
+                ) : null}
+                {/* .some() returns true if found at least one match */}
               </Box>
               <Typography variant="body1" sx={{ mt: 1 }}>
                 {i.name}

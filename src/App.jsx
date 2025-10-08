@@ -13,6 +13,7 @@ import IngredientsPage from "./pages/IngredientsPage";
 import IngredientAdd from "./pages/IngredientAdd";
 import IngredientEdit from "./pages/IngredientEdit";
 import SuppliesPage from "./pages/SuppliesPage";
+import CategoriesPage from "./pages/CategoriesPage";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/ingredients/new" element={<IngredientAdd />} />
           <Route path="/ingredients/:id/edit" element={<IngredientEdit />} />
           <Route path="/supplies" element={<SuppliesPage />} />
+          <Route path="/categories" element={<CategoriesPage />} />
         </Routes>
         <Toaster />
       </BrowserRouter>
