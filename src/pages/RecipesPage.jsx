@@ -40,7 +40,7 @@ export default function RecipesPage() {
     getCategories().then((data) => setCategories(data));
   }, []);
 
-  // get all categories
+  // get all ingredients
   useEffect(() => {
     getIngredients("All").then((data) => setAllIngredients(data));
   }, []);
@@ -61,31 +61,13 @@ export default function RecipesPage() {
     }
   }, [location.search, categories]);
 
-  console.log("categories: " + categories);
-
-  // read category from url
+  // read ingredient from url
   useEffect(() => {
-    // category=${category}
+    // ingredients=${ingredient}
     const params = new URLSearchParams(location.search);
     const ingredientsFromURL = params.get("ingredients");
-    console.log("ingredientsFromURL: " + ingredientsFromURL);
-
-    if (ingredientsFromURL && allIngredients.length > 0) {
-      const match = allIngredients.find(
-        (ing) => ing._id === ingredientsFromURL
-      );
-      if (match) {
-        setIngredients(match._id);
-      }
-    } else {
-      null;
-    }
-  }, [location.search, allIngredients]);
-
-  console.log("ingredients: " + ingredients);
-  console.log("all ingredients: " + allIngredients);
-
-  console.log("ingredients value:", ingredients, typeof ingredients);
+    setIngredients(ingredientsFromURL);
+  }, [location.search]);
 
   // get all recipes
   useEffect(() => {
@@ -93,6 +75,9 @@ export default function RecipesPage() {
       setRecipes(data);
     });
   }, [category, ingredients]);
+
+  console.log("Fetching recipes:" + recipes);
+  console.log("Fetching recipes with:", { category, ingredients });
 
   const handleProductDelete = async (id) => {
     Swal.fire({

@@ -5,6 +5,8 @@ import Typography from "@mui/material/Typography";
 import Header from "../components/Header";
 import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
+import Modal from "@mui/material/Modal";
+import { Autocomplete, TextField } from "@mui/material";
 import Swal from "sweetalert2";
 import { API_URL } from "../utils/constants";
 import { toast } from "sonner";
@@ -18,6 +20,8 @@ export default function SuppliesPage() {
   const [cookies] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
   const { email, token = "" } = currentuser;
+  const [open, setOpen] = useState(false);
+  const [supply, setSupply] = useState([]);
   // to store data from /supplies
   const [supplies, setSupplies] = useState([]);
   const [category, setCategory] = useState("All");
@@ -30,13 +34,22 @@ export default function SuppliesPage() {
     });
   }, []);
 
-  console.log("supplies state: " + supplies);
 
   const handleAllSuppliesNav = async (ingredient) => {
     try {
       // navigate to ingredients page with applied category filter
-      console.log("ingredient" + ingredient);
       navigate(`/recipes?category=All&ingredients=${ingredient}`);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleSuppliesNav = async (event) => {
+    try {
+      // navigate to ingredients page with applied category filter
+      console.log("supply: " + supply);
+      setOpen(false);
+      navigate(`/recipes?category=All&ingredients=${supply}`);
     } catch (error) {
       console.log(error.message);
     }
@@ -163,6 +176,7 @@ export default function SuppliesPage() {
             )
           )}
         </Grid>
+
         <Box
           sx={{
             position: "absolute",
@@ -185,8 +199,72 @@ export default function SuppliesPage() {
           >
             All ingredients
           </Button>
-          <Button variant="contained">Select ingredients</Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            Select ingredients
+          </Button>
         </Box>
+
+        <Modal open={open} onClose={() => setOpen(false)}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              border: "2px solid #000",
+              boxShadow: 24,
+              p: 4,
+            }}
+          >
+            <Autocomplete
+              multiple
+              options={supplies.flatMap((s) => s.ingredient.map((ing) => ing))}
+              getOptionLabel={(option) => option.name}
+              value={supply}
+              onChange={(e, newValue) => setSupply(newValue)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Ingredients"
+                  placeholder="Search..."
+                />
+              )}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "10px",
+                pt: 2,
+              }}
+            >
+              {" "}
+              <Button
+                color="primary"
+                variant="outlined"
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                Close
+              </Button>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => handleAllSuppliesNav(supply.map((s) => s._id))}
+              >
+                Apply Filter
+              </Button>
+            </Box>
+          </Box>
+        </Modal>
       </Box>
     </>
   );

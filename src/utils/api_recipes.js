@@ -14,22 +14,10 @@ export async function getRecipes(category, ingredients) {
     queryParams.category = category;
   }
 
-  // // ingredients filter
-  // if (ingredients && ingredients.length > 0) {
-  //   // join the array into a comma-separated string
-  //   queryParams.ingredients = ingredients.join(",");
-  // }
-
-  if (typeof ingredients === "string") {
-    queryParams.ingredients = ingredients;
-  } else if (Array.isArray(ingredients) && ingredients.length > 0) {
-    queryParams.ingredients = ingredients.join(",");
+  // ingredients filter
+  if (ingredients !== null) {
+  queryParams.ingredients = ingredients;
   }
-
-  // // ingredients filter
-  // if (ingredients !== "") {
-  //   queryParams.ingredients = ingredients;
-  // }
 
   const queryString = new URLSearchParams(queryParams).toString();
 
