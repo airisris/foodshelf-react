@@ -50,8 +50,8 @@ const SignupPage = () => {
 
   return (
     <>
+      <Header />
       <Box sx={{ mx: "50px" }}>
-        <Header />
         <Container maxWidth="sm" sx={{ mt: 3 }}>
           <Paper variant="outlined" sx={{ p: 2 }}>
             <Typography variant="h4" align="center" my={3}>

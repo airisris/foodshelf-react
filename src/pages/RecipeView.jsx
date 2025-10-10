@@ -101,8 +101,8 @@ export default function RecipeView() {
 
   return (
     <>
+      <Header />
       <Box sx={{ mx: "50px" }}>
-        <Header />
         <Container maxWidth="md">
           <Paper elevation={2} sx={{ p: 2 }}>
             <Box

@@ -123,9 +123,8 @@ export default function IngredientsPage() {
 
   return (
     <>
+      <Header />
       <Box sx={{ mx: "50px" }}>
-        <Header />
-
         <Box
           sx={{
             display: "flex",

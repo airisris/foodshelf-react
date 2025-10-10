@@ -43,9 +43,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Box sx={{ mx: "50px" }}>
-        <Header />
-      </Box>
+      <Header />
       <div className="embla" ref={emblaRef}>
         <div className="embla__container">
           <Box

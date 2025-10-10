@@ -60,8 +60,8 @@ export default function IngredientAdd() {
 
   return (
     <>
+      <Header />
       <Box sx={{ mx: "50px" }}>
-        <Header />
         <Container maxWidth="sm">
           <Paper elevation={2} sx={{ p: 2 }}>
             <Typography variant="h4" align="center" my={3}>

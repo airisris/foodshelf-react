@@ -101,8 +101,8 @@ export default function IngredientEdit() {
 
   return (
     <>
+      <Header />
       <Box sx={{ mx: "50px" }}>
-        <Header />
         <Container maxWidth="md">
           <Paper elevation={2} sx={{ p: 2 }}>
             <Typography variant="h4" align="center" my={3}>
