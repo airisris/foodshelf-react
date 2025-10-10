@@ -33,6 +33,7 @@ export default function IngredientsPage() {
   const [recipe, setRecipe] = useState([]);
   // to store data from /ingredients
   const [ingredients, setIngredients] = useState([]);
+  const [allIngredients, setAllIngredients] = useState([]);
   const [supplies, setSupplies] = useState([]);
 
   // read category from url
@@ -45,6 +46,13 @@ export default function IngredientsPage() {
       setCategory(categoryFromURL);
     }
   }, [location.search]);
+
+  // get all ingredients
+  useEffect(() => {
+    getIngredients("All").then((data) => {
+      setAllIngredients(data);
+    });
+  }, []);
 
   // get all ingredients
   useEffect(() => {
@@ -126,14 +134,13 @@ export default function IngredientsPage() {
             mx: "200px",
           }}
         >
-          <Button
-            variant="contained"
+          <Chip
+            label={"All (" + allIngredients.length + ")"}
             onClick={() => {
               setCategory("All");
             }}
-          >
-            All
-          </Button>
+            variant={category === "All" ? "filled" : "outlined"}
+          />
           {[
             "Fruit",
             "Meat",
@@ -142,15 +149,19 @@ export default function IngredientsPage() {
             "Dairy Product",
             "Carb & Grain",
           ].map((cat) => (
-            <Button
+            <Chip
               key={cat}
-              variant="contained"
+              label={
+                cat +
+                " (" +
+                allIngredients.filter((ing) => ing.category === cat).length +
+                ")"
+              }
               onClick={() => {
                 setCategory(cat);
               }}
-            >
-              {cat}
-            </Button>
+              variant={category === cat ? "filled" : "outlined"}
+            />
           ))}
         </Box>
 

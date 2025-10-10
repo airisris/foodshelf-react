@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Header from "../components/Header";
 import Grid from "@mui/material/Grid";
+import Chip from "@mui/material/Chip";
 import Alert from "@mui/material/Alert";
 import Modal from "@mui/material/Modal";
 import { Autocomplete, TextField } from "@mui/material";
@@ -13,6 +14,7 @@ import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { getSupplies, deleteSupply } from "../utils/api_supplies";
+import { getIngredients } from "../utils/api_ingredients";
 import { useNavigate } from "react-router";
 
 export default function SuppliesPage() {
@@ -25,6 +27,14 @@ export default function SuppliesPage() {
   // to store data from /supplies
   const [supplies, setSupplies] = useState([]);
   const [category, setCategory] = useState("All");
+  const [allIngredients, setAllIngredients] = useState([]);
+
+  // get all ingredients
+  useEffect(() => {
+    getIngredients("All").then((data) => {
+      setAllIngredients(data);
+    });
+  }, []);
 
   // get all supplies
   useEffect(() => {
@@ -33,7 +43,6 @@ export default function SuppliesPage() {
       setSupplies(data);
     });
   }, []);
-
 
   const handleAllSuppliesNav = async (ingredient) => {
     try {
@@ -78,6 +87,8 @@ export default function SuppliesPage() {
     });
   };
 
+  console.log(supplies);
+
   return (
     <>
       <Box sx={{ mx: "50px" }}>
@@ -91,14 +102,13 @@ export default function SuppliesPage() {
             mx: "200px",
           }}
         >
-          <Button
-            variant="contained"
+          <Chip
+            label={"All (" + allIngredients.length + ")"}
             onClick={() => {
               setCategory("All");
             }}
-          >
-            All
-          </Button>
+            variant={category === "All" ? "filled" : "outlined"}
+          />
           {[
             "Fruit",
             "Meat",
@@ -107,22 +117,32 @@ export default function SuppliesPage() {
             "Dairy Product",
             "Carb & Grain",
           ].map((cat) => (
-            <Button
+            <Chip
               key={cat}
-              variant="contained"
+              label={
+                cat +
+                " (" +
+                allIngredients.filter((ing) => ing.category === cat).length +
+                ")"
+              }
               onClick={() => {
                 setCategory(cat);
               }}
-            >
-              {cat}
-            </Button>
+              variant={category === cat ? "filled" : "outlined"}
+            />
           ))}
         </Box>
 
         <Grid container spacing={1} sx={{ m: 4 }}>
-          {supplies.some((s) => s.ingredient.length === 0) ? (
+          {supplies
+            // returns only one big array
+            .flatMap((s) =>
+              s.ingredient.filter(
+                (i) => category === "All" || i.category === category
+              )
+            ).length === 0 ? (
             <Grid
-              size={{ xs: 6, md: 8, lg: 10 }}
+              size={{ xs: 12 }}
               sx={{
                 display: "flex",
                 alignItems: "center",

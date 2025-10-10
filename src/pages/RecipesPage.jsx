@@ -8,6 +8,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
+import Chip from "@mui/material/Chip";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -29,9 +30,10 @@ export default function RecipesPage() {
   const { email, token = "" } = currentuser;
   const [category, setCategory] = useState("All");
   const [ingredients, setIngredients] = useState([]);
-  const [allIngredients, setAllIngredients] = useState("");
+  const [allIngredients, setAllIngredients] = useState([]);
   // to store data from /recipes
   const [recipes, setRecipes] = useState([]);
+  const [allRecipes, setAllRecipes] = useState([]);
   // to store data from /categories
   const [categories, setCategories] = useState([]);
 
@@ -66,7 +68,12 @@ export default function RecipesPage() {
     // ingredients=${ingredient}
     const params = new URLSearchParams(location.search);
     const ingredientsFromURL = params.get("ingredients");
-    setIngredients(ingredientsFromURL);
+    if (ingredientsFromURL) {
+      // returns array
+      setIngredients(ingredientsFromURL.split(","));
+    } else {
+      setIngredients([]);
+    }
   }, [location.search]);
 
   // get all recipes
@@ -75,6 +82,13 @@ export default function RecipesPage() {
       setRecipes(data);
     });
   }, [category, ingredients]);
+
+  // get all recipes
+  useEffect(() => {
+    getRecipes("All", ingredients).then((data) => {
+      setAllRecipes(data);
+    });
+  }, [ingredients]);
 
   console.log("Fetching recipes:" + recipes);
   console.log("Fetching recipes with:", { category, ingredients });
@@ -115,24 +129,27 @@ export default function RecipesPage() {
             mx: "200px",
           }}
         >
-          <Button
-            variant="contained"
+          <Chip
+            label={"All (" + allRecipes.length + ")"}
             onClick={() => {
               setCategory("All");
             }}
-          >
-            All
-          </Button>
+            variant={category === "All" ? "filled" : "outlined"}
+          />
           {categories.map((cat) => (
-            <Button
+            <Chip
               key={cat._id}
-              variant="contained"
+              label={
+                cat.name +
+                " (" +
+                allRecipes.filter((r) => r.category._id === cat._id).length +
+                ")"
+              }
               onClick={() => {
                 setCategory(cat._id);
               }}
-            >
-              {cat.name}
-            </Button>
+              variant={category === cat._id ? "filled" : "outlined"}
+            />
           ))}
         </Box>
 
@@ -186,7 +203,7 @@ export default function RecipesPage() {
                   alignItems: "center",
                 }}
               >
-                <Card sx={{ maxWidth: 345 }}>
+                <Card sx={{ maxWidth: 345, minHeight: 415 }}>
                   <CardMedia
                     sx={{ height: 200 }}
                     // image={API_URL + r.image}
@@ -203,6 +220,25 @@ export default function RecipesPage() {
                     >
                       {r.instruction.split(" ").slice(0, 15).join(" ")}...
                     </Typography>
+                    {ingredients.length > 0
+                      ? (() => {
+                          // find ingredients that the user doesn't have on each recipes
+                          const notMatch = r.ingredients.filter(
+                            (ing) => !ingredients.includes(ing._id)
+                          );
+
+                          // if have, display them
+                          if (notMatch.length > 0) {
+                            return (
+                              <Alert severity="info" sx={{ mt: 1 }}>
+                                You don't have:{" "}
+                                {notMatch.map((ing) => ing.name).join(", ")}
+                              </Alert>
+                            );
+                          }
+                        })()
+                      : // immediately calling the function
+                        null}
                   </CardContent>
                   <CardActions
                     sx={{

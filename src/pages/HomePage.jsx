@@ -22,16 +22,6 @@ export default function HomePage() {
   const [cookies] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
   const { token = "" } = currentuser;
-  const [category, setCategory] = useState("all");
-  // to store data from /ingredients
-  const [ingredients, setIngredients] = useState([]);
-
-  // get all ingredients
-  // useEffect(() => {
-  //   getIngredients(category).then((data) => {
-  //     setIngredients(data);
-  //   });
-  // }, [category]);
 
   const handleIngredientsNav = async (category) => {
     try {
@@ -93,8 +83,6 @@ export default function HomePage() {
                 width: 150,
                 height: 150,
                 borderRadius: "50%",
-                border: 2,
-                borderColor: "black",
               }}
               onClick={() => handleIngredientsNav("Fruit")}
             />
@@ -117,8 +105,6 @@ export default function HomePage() {
                 width: 150,
                 height: 150,
                 borderRadius: "50%",
-                border: 2,
-                borderColor: "black",
               }}
               onClick={() => handleIngredientsNav("Meat")}
             />
@@ -141,8 +127,6 @@ export default function HomePage() {
                 width: 150,
                 height: 150,
                 borderRadius: "50%",
-                border: 2,
-                borderColor: "black",
               }}
               onClick={() => handleIngredientsNav("Seafood")}
             />
@@ -165,8 +149,6 @@ export default function HomePage() {
                 width: 150,
                 height: 150,
                 borderRadius: "50%",
-                border: 2,
-                borderColor: "black",
               }}
               onClick={() => handleIngredientsNav("Vegetable")}
             />
@@ -189,8 +171,6 @@ export default function HomePage() {
                 width: 150,
                 height: 150,
                 borderRadius: "50%",
-                border: 2,
-                borderColor: "black",
               }}
               onClick={() => handleIngredientsNav("Dairy Product")}
             />
@@ -213,8 +193,6 @@ export default function HomePage() {
                 width: 150,
                 height: 150,
                 borderRadius: "50%",
-                border: 2,
-                borderColor: "black",
               }}
               onClick={() => handleIngredientsNav("All")}
             />
