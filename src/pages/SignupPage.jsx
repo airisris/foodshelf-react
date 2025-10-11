@@ -2,6 +2,7 @@ import Header from "../components/Header";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import { Link } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useState } from "react";
@@ -11,6 +12,8 @@ import Paper from "@mui/material/Paper";
 import { signUp } from "../utils/api_user";
 import { useNavigate } from "react-router";
 import { useCookies } from "react-cookie";
+import bg from "../assets/bg.jpg";
+import bg2 from "../assets/bg2.jpg";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -51,62 +54,109 @@ const SignupPage = () => {
   return (
     <>
       <Header />
-      <Box sx={{ mx: "50px" }}>
-        <Container maxWidth="sm" sx={{ mt: 3 }}>
-          <Paper variant="outlined" sx={{ p: 2 }}>
-            <Typography variant="h4" align="center" my={3}>
-              Create a New Account
-            </Typography>
-            <Typography>Name</Typography>
-            <Box mb={2}>
-              <TextField
-                label="Name"
-                variant="outlined"
+      <Box
+        style={{
+          backgroundImage: `url(${bg2})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "85vh",
+        }}
+      >
+        <Box
+          sx={{
+            height: "85vh",
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Container maxWidth="sm">
+            <Paper variant="outlined" sx={{ p: 2, py: 4 }}>
+              <Typography variant="h4" align="center" sx={{ mb: 3 }}>
+                Create An Account
+              </Typography>
+              <Box mb={2}>
+                <TextField
+                  label="Name"
+                  color="#000000"
+                  variant="outlined"
+                  fullWidth
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </Box>
+              <Box mb={2}>
+                <TextField
+                  label="Email"
+                  color="#000000"
+                  variant="outlined"
+                  fullWidth
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Box>
+              <Box mb={2}>
+                <TextField
+                  label="Password"
+                  type="password"
+                  color="#000000"
+                  variant="outlined"
+                  fullWidth
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Box>
+              <Box mb={2}>
+                <TextField
+                  label="Confirm Password"
+                  type="password"
+                  color="#000000"
+                  variant="outlined"
+                  fullWidth
+                  value={cPassword}
+                  onChange={(e) => setCPassword(e.target.value)}
+                />
+              </Box>
+              <Button
                 fullWidth
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Box>
-            <Typography>Email</Typography>
-            <Box mb={2}>
-              <TextField
-                label="Email"
-                variant="outlined"
-                fullWidth
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Box>
-            <Typography>Password</Typography>
-            <Box mb={2}>
-              <TextField
-                label="Password"
-                type="password"
-                variant="outlined"
-                fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Box>
-            <Typography>Confirm Password</Typography>
-            <Box mb={2}>
-              <TextField
-                label="Confirm Password"
-                variant="outlined"
-                fullWidth
-                value={cPassword}
-                onChange={(e) => setCPassword(e.target.value)}
-              />
-            </Box>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => handleSignUp()}
-            >
-              Sign Up
-            </Button>
-          </Paper>
-        </Container>
+                color="warning"
+                variant="contained"
+                onClick={() => handleSignUp()}
+              >
+                Sign Up
+              </Button>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  typography: "body1",
+                  "& > :not(style) ~ :not(style)": {
+                    ml: 1,
+                  },
+                  mt: 3,
+                }}
+              >
+                <Typography>Already have an account?</Typography>
+                <Link
+                  href="/login"
+                  sx={{
+                    marginRight: "8px",
+                    color: "#FF8C42",
+                    textDecorationColor: "black",
+                    "&:hover": {
+                      color: "black",
+                      textDecorationColor: "#FF8C42",
+                    },
+                  }}
+                >
+                  Log in
+                </Link>
+              </Box>
+            </Paper>
+          </Container>
+        </Box>
       </Box>
     </>
   );

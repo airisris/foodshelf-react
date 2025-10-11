@@ -2,6 +2,7 @@ import Header from "../components/Header";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+import { Link } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useState } from "react";
@@ -11,6 +12,8 @@ import Paper from "@mui/material/Paper";
 import { logIn } from "../utils/api_user";
 import { useNavigate } from "react-router";
 import { useCookies } from "react-cookie";
+import bg from "../assets/bg.jpg";
+import bg2 from "../assets/bg2.jpg";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -46,38 +49,88 @@ const LoginPage = () => {
   return (
     <>
       <Header />
-      <Box sx={{ mx: "50px" }}>
-        <Container maxWidth="sm" sx={{ mt: 3 }}>
-          <Paper variant="outlined" sx={{ p: 2 }}>
-            <Typography variant="h4" align="center" my={3}>
-              Login to Your Account
-            </Typography>
-            <Typography>Email</Typography>
-            <Box mb={2}>
-              <TextField
-                label="Email"
-                variant="outlined"
+      <Box
+        style={{
+          backgroundImage: `url(${bg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "85vh",
+        }}
+      >
+        <Box
+          sx={{
+            height: "85vh",
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Container maxWidth="sm">
+            <Paper variant="outlined" sx={{ p: 2, py: 4 }}>
+              <Typography variant="h4" align="center" sx={{ mb: 3 }}>
+                Welcome Back!
+              </Typography>
+              <Box mb={2}>
+                <TextField
+                  label="Email"
+                  color="#000000"
+                  variant="outlined"
+                  fullWidth
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Box>
+              <Box mb={2}>
+                <TextField
+                  label="Password"
+                  type="password"
+                  color="#000000"
+                  variant="outlined"
+                  fullWidth
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Box>
+              <Button
                 fullWidth
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Box>
-            <Typography>Password</Typography>
-            <Box mb={2}>
-              <TextField
-                label="Password"
-                type="password"
-                variant="outlined"
-                fullWidth
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Box>
-            <Button fullWidth variant="contained" onClick={() => handleLogin()}>
-              Login
-            </Button>
-          </Paper>
-        </Container>
+                color="warning"
+                variant="contained"
+                onClick={() => handleLogin()}
+              >
+                Login
+              </Button>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  typography: "body1",
+                  "& > :not(style) ~ :not(style)": {
+                    ml: 1,
+                  },
+                  mt: 3,
+                }}
+              >
+                <Typography>Doesn't have an account yet?</Typography>
+                <Link
+                  href="/signup"
+                  sx={{
+                    marginRight: "8px",
+                    color: "#FF8C42",
+                    textDecorationColor: "black",
+                    "&:hover": {
+                      color: "black",
+                      textDecorationColor: "#FF8C42",
+                    },
+                  }}
+                >
+                  Sign up
+                </Link>
+              </Box>
+            </Paper>
+          </Container>
+        </Box>
       </Box>
     </>
   );

@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Header from "../components/Header";
@@ -6,9 +7,16 @@ import Grid from "@mui/material/Grid";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
+import fruit from "../assets/fruit.png";
 import meat from "../assets/meat.png";
 import seafood from "../assets/seafood.png";
+import vege from "../assets/vege.png";
+import dairy from "../assets/dairy.png";
 import more from "../assets/more.png";
+import breakfast from "../assets/breakfast.png";
+import mainCourse from "../assets/main course.png";
+import dessert from "../assets/dessert.png";
+import moreFood from "../assets/moreFood.png";
 import bannerWaste from "../assets/bannerWaste.png";
 import bannerDiwali from "../assets/bannerDiwali.png";
 import { useState, useEffect } from "react";
@@ -64,7 +72,7 @@ export default function HomePage() {
         </Box>
       </div>
       <Box sx={{ mx: "50px" }}>
-        <Typography variant="h4">Ingredients</Typography>
+        <Typography variant="h4" sx={{mt: 5}}>Ingredients</Typography>
         <Grid container spacing={1} sx={{ m: 4 }}>
           <Grid
             size={{ xs: 6, md: 4, lg: 2 }}
@@ -76,15 +84,18 @@ export default function HomePage() {
           >
             <Box
               component="img"
-              src="https://www.earthytales.in/uploads/products/3x/organic-low-cist-fruits_(1).jpg?v=1609202504"
+              src={fruit}
               sx={{
-                width: 150,
-                height: 150,
-                borderRadius: "50%",
+                width: 170,
+                height: 120,
+                cursor: "pointer",
               }}
               onClick={() => handleIngredientsNav("Fruit")}
             />
-            <Typography variant="body1" sx={{ mt: 1 }}>
+            <Typography
+              variant="body1"
+              sx={{ mt: 1, textDecoration: "underline" }}
+            >
               Fruit
             </Typography>
           </Grid>
@@ -100,13 +111,16 @@ export default function HomePage() {
               component="img"
               src={meat}
               sx={{
-                width: 150,
-                height: 150,
-                borderRadius: "50%",
+                width: 170,
+                height: 120,
+                cursor: "pointer",
               }}
               onClick={() => handleIngredientsNav("Meat")}
             />
-            <Typography variant="body1" sx={{ mt: 1 }}>
+            <Typography
+              variant="body1"
+              sx={{ mt: 1, textDecoration: "underline" }}
+            >
               Meat
             </Typography>
           </Grid>
@@ -122,13 +136,16 @@ export default function HomePage() {
               component="img"
               src={seafood}
               sx={{
-                width: 150,
-                height: 150,
-                borderRadius: "50%",
+                width: 170,
+                height: 120,
+                cursor: "pointer",
               }}
               onClick={() => handleIngredientsNav("Seafood")}
             />
-            <Typography variant="body1" sx={{ mt: 1 }}>
+            <Typography
+              variant="body1"
+              sx={{ mt: 1, textDecoration: "underline" }}
+            >
               Seafood
             </Typography>
           </Grid>
@@ -142,15 +159,18 @@ export default function HomePage() {
           >
             <Box
               component="img"
-              src={seafood}
+              src={vege}
               sx={{
-                width: 150,
-                height: 150,
-                borderRadius: "50%",
+                width: 170,
+                height: 120,
+                cursor: "pointer",
               }}
               onClick={() => handleIngredientsNav("Vegetable")}
             />
-            <Typography variant="body1" sx={{ mt: 1 }}>
+            <Typography
+              variant="body1"
+              sx={{ mt: 1, textDecoration: "underline" }}
+            >
               Vegetable
             </Typography>
           </Grid>
@@ -164,15 +184,18 @@ export default function HomePage() {
           >
             <Box
               component="img"
-              src={seafood}
+              src={dairy}
               sx={{
-                width: 150,
-                height: 150,
-                borderRadius: "50%",
+                width: 170,
+                height: 120,
+                cursor: "pointer",
               }}
               onClick={() => handleIngredientsNav("Dairy Product")}
             />
-            <Typography variant="body1" sx={{ mt: 1 }}>
+            <Typography
+              variant="body1"
+              sx={{ mt: 1, textDecoration: "underline" }}
+            >
               Dairy Product
             </Typography>
           </Grid>
@@ -188,18 +211,21 @@ export default function HomePage() {
               component="img"
               src={more}
               sx={{
-                width: 150,
-                height: 150,
-                borderRadius: "50%",
+                width: 170,
+                height: 120,
+                cursor: "pointer",
               }}
               onClick={() => handleIngredientsNav("All")}
             />
-            <Typography variant="body1" sx={{ mt: 1 }}>
+            <Typography
+              variant="body1"
+              sx={{ mt: 1, textDecoration: "underline" }}
+            >
               More
             </Typography>
           </Grid>
         </Grid>
-        <Typography variant="h4">Recipes</Typography>
+        <Typography variant="h4" sx={{pt: 3}}>Recipes</Typography>
         <Grid container spacing={1} sx={{ m: 4 }}>
           <Grid
             size={{ xs: 6, md: 4, lg: 3 }}
@@ -210,19 +236,16 @@ export default function HomePage() {
             }}
           >
             <Box
+              className="nav"
               component="img"
-              src="https://www.earthytales.in/uploads/products/3x/organic-low-cist-fruits_(1).jpg?v=1609202504"
+              src={breakfast}
               sx={{
                 width: 250,
                 height: 300,
-                border: 2,
-                borderColor: "black",
+                borderRadius: 1,
               }}
               onClick={() => handleRecipesNav("Breakfast")}
             />
-            <Typography variant="body1" sx={{ mt: 1 }}>
-              Breakfast
-            </Typography>
           </Grid>
           <Grid
             size={{ xs: 6, md: 4, lg: 3 }}
@@ -233,19 +256,16 @@ export default function HomePage() {
             }}
           >
             <Box
+              className="nav"
               component="img"
-              src={meat}
+              src={mainCourse}
               sx={{
                 width: 250,
                 height: 300,
-                border: 2,
-                borderColor: "black",
+                borderRadius: 1,
               }}
               onClick={() => handleRecipesNav("Main Course")}
             />
-            <Typography variant="body1" sx={{ mt: 1 }}>
-              Main Course
-            </Typography>
           </Grid>
           <Grid
             size={{ xs: 6, md: 4, lg: 3 }}
@@ -256,19 +276,16 @@ export default function HomePage() {
             }}
           >
             <Box
+              className="nav"
               component="img"
-              src={seafood}
+              src={dessert}
               sx={{
                 width: 250,
                 height: 300,
-                border: 2,
-                borderColor: "black",
+                borderRadius: 1,
               }}
               onClick={() => handleRecipesNav("Dessert")}
             />
-            <Typography variant="body1" sx={{ mt: 1 }}>
-              Dessert
-            </Typography>
           </Grid>
           <Grid
             size={{ xs: 6, md: 4, lg: 3 }}
@@ -279,19 +296,16 @@ export default function HomePage() {
             }}
           >
             <Box
+              className="nav"
               component="img"
-              src={more}
+              src={moreFood}
               sx={{
                 width: 250,
                 height: 300,
-                border: 2,
-                borderColor: "black",
+                borderRadius: 1,
               }}
               onClick={() => handleRecipesNav("All")}
             />
-            <Typography variant="body1" sx={{ mt: 1 }}>
-              More
-            </Typography>
           </Grid>
         </Grid>
       </Box>

@@ -53,17 +53,6 @@ export default function SuppliesPage() {
     }
   };
 
-  const handleSuppliesNav = async (event) => {
-    try {
-      // navigate to ingredients page with applied category filter
-      console.log("supply: " + supply);
-      setOpen(false);
-      navigate(`/recipes?category=All&ingredients=${supply}`);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
   const handleRemoveSupply = async (ingredient) => {
     Swal.fire({
       title: "Are you sure you want to remove the ingredient?",
@@ -91,7 +80,7 @@ export default function SuppliesPage() {
 
   return (
     <>
-      <Header />
+      <Header current="supplies" />
       <Box sx={{ mx: "50px" }}>
         <Box
           sx={{
@@ -102,7 +91,7 @@ export default function SuppliesPage() {
           }}
         >
           <Chip
-            label={"All (" + allIngredients.length + ")"}
+            label={"All (" + supplies.flatMap((s) => s.ingredient).length + ")"}
             onClick={() => {
               setCategory("All");
             }}
@@ -121,7 +110,9 @@ export default function SuppliesPage() {
               label={
                 cat +
                 " (" +
-                allIngredients.filter((ing) => ing.category === cat).length +
+                supplies
+                  .flatMap((s) => s.ingredient)
+                  .filter((ing) => ing.category === cat).length +
                 ")"
               }
               onClick={() => {

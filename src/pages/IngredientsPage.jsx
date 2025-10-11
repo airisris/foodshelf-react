@@ -123,7 +123,7 @@ export default function IngredientsPage() {
 
   return (
     <>
-      <Header />
+      <Header current="ingredients" />
       <Box sx={{ mx: "50px" }}>
         <Box
           sx={{
@@ -165,31 +165,34 @@ export default function IngredientsPage() {
         </Box>
 
         <Grid container spacing={1} sx={{ m: 4 }}>
-          <Grid
-            size={{ xs: 6, md: 4, lg: 2 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              component={Link}
-              to="/ingredients/new"
+          {currentuser && currentuser.role === "admin" ? (
+            <Grid
+              size={{ xs: 6, md: 4, lg: 2 }}
               sx={{
                 display: "flex",
-                justifyContent: "center",
+                flexDirection: "column",
                 alignItems: "center",
-                width: 150,
-                height: 150,
-                borderRadius: "10%",
-                border: 2,
-                borderColor: "black",
               }}
             >
-              <AddIcon />
-            </Box>
-          </Grid>
+              <Box
+                component={Link}
+                to="/ingredients/new"
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: 150,
+                  height: 150,
+                  borderRadius: "10%",
+                  border: 2,
+                  borderColor: "black",
+                }}
+              >
+                <AddIcon />
+              </Box>
+            </Grid>
+          ) : null}
+
           {ingredients.length === 0 ? (
             <Grid
               size={{ xs: 6, md: 8, lg: 10 }}

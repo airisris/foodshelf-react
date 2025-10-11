@@ -111,7 +111,7 @@ export default function CategoriesPage() {
 
   return (
     <>
-      <Header />
+      <Header current="categories" />
       <Box sx={{ mx: "50px" }}>
         <Container maxWidth="md">
           <Typography variant="h5" sx={{ fontWeight: "bold", py: 3 }}>
