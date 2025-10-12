@@ -13,7 +13,6 @@ import { useState, useEffect } from "react";
 import { getRecipe } from "../utils/api_recipes";
 import { getCategories } from "../utils/api_category";
 import { getIngredients } from "../utils/api_ingredients";
-import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router";
 import { API_URL } from "../utils/constants";
 import { useCookies } from "react-cookie";
@@ -99,7 +98,7 @@ export default function RecipeView() {
     <>
       <Header />
       <Box sx={{ bgcolor: "#f8f8f8", minHeight: "85vh" }}>
-        <Box sx={{ mx: "50px" }}>
+        <Box sx={{ mx: { xs: "10px", sm: "50px" } }}>
           <Container maxWidth="md">
             <Box sx={{ py: 1 }}>
               <Paper
@@ -132,7 +131,7 @@ export default function RecipeView() {
                 </Box>
                 <Grid container spacing={1} sx={{ m: 4 }}>
                   <Grid
-                    size={{ xs: 12, md: 12, lg: 6 }}
+                    size={{ xs: 12, md: 6 }}
                     sx={{
                       display: "flex",
                       alignItems: "center",
@@ -150,7 +149,7 @@ export default function RecipeView() {
                     />
                   </Grid>
                   <Grid
-                    size={{ xs: 12, md: 12, lg: 6 }}
+                    size={{ xs: 12, md: 6 }}
                     sx={{
                       display: "flex",
                       alignItems: "center",
@@ -195,7 +194,7 @@ export default function RecipeView() {
                     .filter((i) => i.trim())
                     // show each step with number
                     .map((i, index) => (
-                      <Typography key={i}>
+                      <Typography key={index}>
                         {index + 1}. {i}
                       </Typography>
                     ))}

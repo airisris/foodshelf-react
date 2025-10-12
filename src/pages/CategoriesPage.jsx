@@ -76,7 +76,7 @@ export default function CategoriesPage() {
       setName("");
       toast.success("New category has been added");
     } catch (error) {
-      toast.error(error.message);
+      console.log(error.message);
     }
   };
 
@@ -115,7 +115,7 @@ export default function CategoriesPage() {
     <>
       <Header current="categories" />
       <Box sx={{ bgcolor: "#f8f8f8", minHeight: "85vh" }}>
-        <Box sx={{ mx: "50px" }}>
+        <Box sx={{ mx: { xs: "10px", sm: "50px" } }}>
           <Container maxWidth="sm">
             <Box sx={{ pt: 1 }}>
               <Paper
@@ -131,6 +131,7 @@ export default function CategoriesPage() {
               >
                 <TextField
                   label="Category Name"
+                  color="#000000"
                   fullWidth
                   value={name}
                   onChange={(e) => setName(e.target.value)}

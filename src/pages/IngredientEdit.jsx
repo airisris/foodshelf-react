@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import Header from "../components/Header";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -11,6 +12,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import ClearIcon from "@mui/icons-material/Clear";
 import { useState, useEffect } from "react";
 import { getIngredient, updateIngredient } from "../utils/api_ingredients";
 import { toast } from "sonner";
@@ -66,7 +68,7 @@ export default function IngredientEdit() {
       toast.success("Ingredient has been updated");
       navigate("/ingredients");
     } catch (error) {
-      toast.error(error.message);
+      console.log(error.message);
     }
   };
 
@@ -113,7 +115,21 @@ export default function IngredientEdit() {
           }}
         >
           <Container maxWidth="sm">
-            <Paper variant="outlined" sx={{ p: 2, py: 4 }}>
+            <Paper
+              variant="outlined"
+              sx={{ p: 2, py: 4, position: "relative" }}
+            >
+              <Box
+                component={Link}
+                to="/ingredients"
+                sx={{
+                  position: "absolute",
+                  top: 20,
+                  right: 20,
+                }}
+              >
+                <ClearIcon color="error" />
+              </Box>
               <Typography variant="h4" align="center" sx={{ mb: 3 }}>
                 Update Ingredient
               </Typography>
@@ -150,6 +166,7 @@ export default function IngredientEdit() {
                       "Vegetable",
                       "Dairy Product",
                       "Carb & Grain",
+                      "Other",
                     ].map((cat) => (
                       <MenuItem value={cat}>{cat}</MenuItem>
                     ))}

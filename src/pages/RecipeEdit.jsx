@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import Header from "../components/Header";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -11,6 +12,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { styled } from "@mui/material/styles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import ClearIcon from "@mui/icons-material/Clear";
 import { useState, useEffect } from "react";
 import { getRecipe, updateRecipe } from "../utils/api_recipes";
 import { getCategories } from "../utils/api_category";
@@ -89,7 +91,7 @@ export default function RecipeEdit() {
       toast.success("Recipe has been updated");
       navigate("/recipes");
     } catch (error) {
-      toast.error(error.message);
+      console.log(error.message);
     }
   };
 
@@ -126,10 +128,24 @@ export default function RecipeEdit() {
     <>
       <Header />
       <Box sx={{ bgcolor: "#f8f8f8", minHeight: "85vh" }}>
-        <Box sx={{ mx: "50px" }}>
+        <Box sx={{ mx: { xs: "10px", sm: "50px" } }}>
           <Container maxWidth="md">
             <Box sx={{ py: 1 }}>
-              <Paper variant="outlined" sx={{ p: 2, py: 4, my: 2 }}>
+              <Paper
+                variant="outlined"
+                sx={{ p: 2, py: 4, my: 2, position: "relative" }}
+              >
+                <Box
+                  component={Link}
+                  to="/recipes"
+                  sx={{
+                    position: "absolute",
+                    top: 20,
+                    right: 20,
+                  }}
+                >
+                  <ClearIcon color="error" />
+                </Box>
                 <Typography variant="h4" align="center" sx={{ mb: 3 }}>
                   Update Recipe
                 </Typography>

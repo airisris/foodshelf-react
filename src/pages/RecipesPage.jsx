@@ -119,6 +119,8 @@ export default function RecipesPage() {
     });
   };
 
+  console.log(token);
+
   return (
     <>
       <Header current="recipes" />
@@ -184,13 +186,16 @@ export default function RecipesPage() {
               color="warning"
               component={Link}
               to="/recipes/new"
+              sx={{
+                minWidth: "100px",
+              }}
             >
               <AddIcon sx={{ mr: 1 }} /> Recipe
             </Button>
           ) : null}
         </Box>
 
-        <Box sx={{ mx: "50px" }}>
+        <Box sx={{ mx: { xs: "10px", sm: "50px" } }}>
           <Divider />
           <Grid container spacing={1} sx={{ m: 4 }}>
             {recipes.length === 0 ? (
@@ -223,7 +228,7 @@ export default function RecipesPage() {
                       flexDirection: "column",
                       justifyContent: "space-between",
                       height: "100%",
-                      minHeight: 415,
+                      minHeight: 300,
                     }}
                   >
                     <CardMedia
@@ -233,9 +238,19 @@ export default function RecipesPage() {
                       src={API_URL + r.image}
                     />
                     <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
+                      <Typography variant="h5" component="div" sx={{ mb: 1 }}>
                         {r.name}
                       </Typography>
+                      {category === "All" ? (
+                        <Chip
+                          size="small"
+                          label={
+                            categories.find((cat) => cat._id === r.category._id)
+                              .name
+                          }
+                          sx={{ mb: 2 }}
+                        />
+                      ) : null}
                       <Typography
                         variant="body2"
                         sx={{ color: "text.secondary" }}

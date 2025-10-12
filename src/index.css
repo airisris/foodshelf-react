@@ -44,14 +44,16 @@ body {
   cursor: pointer;
 }
 
-.nav:hover {opacity: 0.6}
+.nav:hover {
+  opacity: 0.6;
+}
 
 .title {
   box-shadow: inset 0 0 0 0 #f4511e;
   color: "black";
-  margin: 0 -.25rem;
-  padding: 0 .25rem;
-  transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
+  margin: 0 -0.25rem;
+  padding: 0 0.25rem;
+  transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
 .title:hover {

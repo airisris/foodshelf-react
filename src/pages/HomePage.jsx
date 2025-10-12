@@ -73,271 +73,343 @@ export default function HomePage() {
           <KeyboardDoubleArrowDownIcon fontSize="large" />
         </Box>
       </div>
-      <Box sx={{ mx: "50px" }}>
+      <Box sx={{ mx: { xs: "10px", sm: "50px" } }}>
         <Typography variant="h4" sx={{ mt: 5 }} className="title">
           INGREDIENTS
         </Typography>
-        <Grid container spacing={1} sx={{ m: 4 }}>
-          <Grid
-            size={{ xs: 6, md: 4, lg: 2 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            overflow: "hidden",
+            gap: 2,
+            px: { xs: 2, md: 6 },
+          }}
+        >
+          <Swiper
+            slidesPerView="auto"
+            spaceBetween={10}
+            pagination={{
+              clickable: true,
+            }}
+            modules={[Pagination]}
+            style={{
+              width: "fit-content",
+              padding: "10px 0",
+              "--swiper-pagination-color": "#FF8C42",
             }}
           >
-            <Box
-              component="img"
-              src={fruit}
-              sx={{
-                width: 170,
-                height: 120,
-                cursor: "pointer",
-              }}
-              onClick={() => handleIngredientsNav("Fruit")}
-            />
-            <Typography
-              variant="body1"
-              sx={{
-                mt: 1,
-                textDecoration: "underline",
-                textDecorationColor: "#FF8C42",
-              }}
-            >
-              Fruit
-            </Typography>
-          </Grid>
-          <Grid
-            size={{ xs: 6, md: 4, lg: 2 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              component="img"
-              src={meat}
-              sx={{
-                width: 170,
-                height: 120,
-                cursor: "pointer",
-              }}
-              onClick={() => handleIngredientsNav("Meat")}
-            />
-            <Typography
-              variant="body1"
-              sx={{
-                mt: 1,
-                textDecoration: "underline",
-                textDecorationColor: "#FF8C42",
-              }}
-            >
-              Meat
-            </Typography>
-          </Grid>
-          <Grid
-            size={{ xs: 6, md: 4, lg: 2 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              component="img"
-              src={seafood}
-              sx={{
-                width: 170,
-                height: 120,
-                cursor: "pointer",
-              }}
-              onClick={() => handleIngredientsNav("Seafood")}
-            />
-            <Typography
-              variant="body1"
-              sx={{
-                mt: 1,
-                textDecoration: "underline",
-                textDecorationColor: "#FF8C42",
-              }}
-            >
-              Seafood
-            </Typography>
-          </Grid>
-          <Grid
-            size={{ xs: 6, md: 4, lg: 2 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              component="img"
-              src={vege}
-              sx={{
-                width: 170,
-                height: 120,
-                cursor: "pointer",
-              }}
-              onClick={() => handleIngredientsNav("Vegetable")}
-            />
-            <Typography
-              variant="body1"
-              sx={{
-                mt: 1,
-                textDecoration: "underline",
-                textDecorationColor: "#FF8C42",
-              }}
-            >
-              Vegetable
-            </Typography>
-          </Grid>
-          <Grid
-            size={{ xs: 6, md: 4, lg: 2 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              component="img"
-              src={dairy}
-              sx={{
-                width: 170,
-                height: 120,
-                cursor: "pointer",
-              }}
-              onClick={() => handleIngredientsNav("Dairy Product")}
-            />
-            <Typography
-              variant="body1"
-              sx={{
-                mt: 1,
-                textDecoration: "underline",
-                textDecorationColor: "#FF8C42",
-              }}
-            >
-              Dairy Product
-            </Typography>
-          </Grid>
-          <Grid
-            size={{ xs: 6, md: 4, lg: 2 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              component="img"
-              src={more}
-              sx={{
-                width: 170,
-                height: 120,
-                cursor: "pointer",
-              }}
-              onClick={() => handleIngredientsNav("All")}
-            />
-            <Typography
-              variant="body1"
-              sx={{
-                mt: 1,
-                textDecoration: "underline",
-                textDecorationColor: "#FF8C42",
-              }}
-            >
-              More
-            </Typography>
-          </Grid>
-        </Grid>
+            <SwiperSlide style={{ width: "auto" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  component="img"
+                  src={fruit}
+                  sx={{
+                    width: { xs: 150, sm: 170 },
+                    height: { xs: 100, sm: 120 },
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleIngredientsNav("Fruit")}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 1,
+                    textDecoration: "underline",
+                    textDecorationColor: "#FF8C42",
+                  }}
+                >
+                  Fruit
+                </Typography>
+              </Box>
+            </SwiperSlide>
+
+            <SwiperSlide style={{ width: "auto" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  component="img"
+                  src={meat}
+                  sx={{
+                    width: { xs: 150, sm: 170 },
+                    height: { xs: 100, sm: 120 },
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleIngredientsNav("Meat")}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 1,
+                    textDecoration: "underline",
+                    textDecorationColor: "#FF8C42",
+                  }}
+                >
+                  Meat
+                </Typography>
+              </Box>
+            </SwiperSlide>
+
+            <SwiperSlide style={{ width: "auto" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  component="img"
+                  src={seafood}
+                  sx={{
+                    width: { xs: 150, sm: 170 },
+                    height: { xs: 100, sm: 120 },
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleIngredientsNav("Seafood")}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 1,
+                    textDecoration: "underline",
+                    textDecorationColor: "#FF8C42",
+                  }}
+                >
+                  Seafood
+                </Typography>
+              </Box>
+            </SwiperSlide>
+
+            <SwiperSlide style={{ width: "auto" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  component="img"
+                  src={vege}
+                  sx={{
+                    width: { xs: 150, sm: 170 },
+                    height: { xs: 100, sm: 120 },
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleIngredientsNav("Vegetable")}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 1,
+                    textDecoration: "underline",
+                    textDecorationColor: "#FF8C42",
+                  }}
+                >
+                  Vegetable
+                </Typography>
+              </Box>
+            </SwiperSlide>
+
+            <SwiperSlide style={{ width: "auto" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  component="img"
+                  src={dairy}
+                  sx={{
+                    width: { xs: 150, sm: 170 },
+                    height: { xs: 100, sm: 120 },
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleIngredientsNav("Dairy Product")}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 1,
+                    textDecoration: "underline",
+                    textDecorationColor: "#FF8C42",
+                  }}
+                >
+                  Dairy Product
+                </Typography>
+              </Box>
+            </SwiperSlide>
+
+            <SwiperSlide style={{ width: "auto" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  component="img"
+                  src={more}
+                  sx={{
+                    width: { xs: 150, sm: 170 },
+                    height: { xs: 100, sm: 120 },
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleIngredientsNav("All")}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 1,
+                    textDecoration: "underline",
+                    textDecorationColor: "#FF8C42",
+                  }}
+                >
+                  More
+                </Typography>
+              </Box>
+            </SwiperSlide>
+          </Swiper>
+        </Box>
+
         <Typography variant="h4" sx={{ pt: 3 }}>
           RECIPES
         </Typography>
-        <Grid container spacing={1} sx={{ m: 4 }}>
-          <Grid
-            size={{ xs: 6, md: 4, lg: 3 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+        {/* <Grid container spacing={1} sx={{ m: 4 }}> */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-around",
+            alignItems: "center",
+            overflow: "hidden",
+            gap: 2,
+            px: { xs: 2, md: 6 },
+          }}
+        >
+          <Swiper
+            slidesPerView="auto"
+            spaceBetween={10}
+            pagination={{
+              clickable: true,
+            }}
+            modules={[Pagination]}
+            style={{
+              width: "fit-content",
+              padding: "10px 0",
+              "--swiper-pagination-color": "#FF8C42",
             }}
           >
-            <Box
-              className="nav"
-              component="img"
-              src={breakfast}
-              sx={{
-                width: 250,
-                height: 300,
-                borderRadius: 1,
-              }}
-              onClick={() => handleRecipesNav("Breakfast")}
-            />
-          </Grid>
-          <Grid
-            size={{ xs: 6, md: 4, lg: 3 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              className="nav"
-              component="img"
-              src={mainCourse}
-              sx={{
-                width: 250,
-                height: 300,
-                borderRadius: 1,
-              }}
-              onClick={() => handleRecipesNav("Main Course")}
-            />
-          </Grid>
-          <Grid
-            size={{ xs: 6, md: 4, lg: 3 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              className="nav"
-              component="img"
-              src={dessert}
-              sx={{
-                width: 250,
-                height: 300,
-                borderRadius: 1,
-              }}
-              onClick={() => handleRecipesNav("Dessert")}
-            />
-          </Grid>
-          <Grid
-            size={{ xs: 6, md: 4, lg: 3 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box
-              className="nav"
-              component="img"
-              src={moreFood}
-              sx={{
-                width: 250,
-                height: 300,
-                borderRadius: 1,
-              }}
-              onClick={() => handleRecipesNav("All")}
-            />
-          </Grid>
-        </Grid>
+            <SwiperSlide style={{ width: "auto" }}>
+              <Box
+                size={{ xs: 6, md: 4, lg: 3 }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  className="nav"
+                  component="img"
+                  src={breakfast}
+                  sx={{
+                    width: 250,
+                    height: 300,
+                    borderRadius: 1,
+                  }}
+                  onClick={() => handleRecipesNav("Breakfast")}
+                />
+              </Box>
+            </SwiperSlide>
+
+            <SwiperSlide style={{ width: "auto" }}>
+              <Box
+                size={{ xs: 6, md: 4, lg: 3 }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  className="nav"
+                  component="img"
+                  src={mainCourse}
+                  sx={{
+                    width: 250,
+                    height: 300,
+                    borderRadius: 1,
+                  }}
+                  onClick={() => handleRecipesNav("Main Course")}
+                />
+              </Box>
+            </SwiperSlide>
+
+            <SwiperSlide style={{ width: "auto" }}>
+              <Box
+                size={{ xs: 6, md: 4, lg: 3 }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  className="nav"
+                  component="img"
+                  src={dessert}
+                  sx={{
+                    width: 250,
+                    height: 300,
+                    borderRadius: 1,
+                  }}
+                  onClick={() => handleRecipesNav("Dessert")}
+                />
+              </Box>
+            </SwiperSlide>
+
+            <SwiperSlide style={{ width: "auto" }}>
+              <Box
+                size={{ xs: 6, md: 4, lg: 3 }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  className="nav"
+                  component="img"
+                  src={moreFood}
+                  sx={{
+                    width: 250,
+                    height: 300,
+                    borderRadius: 1,
+                  }}
+                  onClick={() => handleRecipesNav("All")}
+                />
+              </Box>
+            </SwiperSlide>
+          </Swiper>
+        </Box>
+
+        {/* </Grid> */}
       </Box>
     </>
   );

@@ -131,6 +131,7 @@ export default function SuppliesPage() {
                 "Vegetable",
                 "Dairy Product",
                 "Carb & Grain",
+                "Other",
               ].map((cat) => (
                 <Chip
                   key={cat}
@@ -153,7 +154,7 @@ export default function SuppliesPage() {
           </Swiper>
         </Box>
 
-        <Box sx={{ mx: "50px" }}>
+        <Box sx={{ mx: { xs: "10px", sm: "50px" }, pb: 6 }}>
           <Divider />
           <Grid container spacing={1} sx={{ m: 4 }}>
             {!token ? (
@@ -240,6 +241,9 @@ export default function SuppliesPage() {
                       <Typography variant="body1" sx={{ mt: 1 }}>
                         {i.name}
                       </Typography>
+                      {category === "All" ? (
+                        <Chip size="small" label={i.category} sx={{ my: 1 }} />
+                      ) : null}
                     </Grid>
                   ))
               )
@@ -248,18 +252,23 @@ export default function SuppliesPage() {
 
           <Box
             sx={{
-              position: "absolute",
-              bottom: 20,
-              right: 20,
+              position: "fixed",
+              bottom: 0,
+              right: { xs: 10, sm: 20 },
               display: "flex",
-              justifyContent: "center",
+              justifyContent: "flex-end",
               alignItems: "center",
+              py: 2,
+              backgroundColor: "rgba(255, 255, 255, 0.2)",
+              backdropFilter: "blur(7px)",
+              width: { xs: "95%", sm: "100%" },
             }}
           >
             <Typography>Filter for Recipes:</Typography>
             <Button
-              variant="contained"
-              sx={{ mx: 2 }}
+              variant="outlined"
+              color="warning"
+              sx={{ mx: { xs: 1, sm: 2 } }}
               onClick={() =>
                 handleAllSuppliesNav(
                   supplies.map((s) => s.ingredient.map((ing) => ing._id))
@@ -271,6 +280,7 @@ export default function SuppliesPage() {
             </Button>
             <Button
               variant="contained"
+              color="warning"
               onClick={() => {
                 setOpen(true);
               }}

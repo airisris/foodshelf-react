@@ -40,7 +40,11 @@ const Header = (props) => {
               <Box
                 component={Link}
                 to="/"
-                sx={{ mr: "10px", order: { xs: 2, md: 1 }, ml: { xs: "20px", md: 0 } }}
+                sx={{
+                  mr: "10px",
+                  order: { sm: 2, md: 1 },
+                  ml: { sm: "20px", md: 0 },
+                }}
               >
                 <img src={logo} width="100" />
               </Box>
@@ -48,7 +52,10 @@ const Header = (props) => {
                 <Typography
                   variant="body1"
                   align="center"
-                  sx={{ order: { xs: 1, md: 2 } }}
+                  sx={{
+                    order: { sm: 1, md: 2 },
+                    display: { xs: "none", sm: "block" },
+                  }}
                 >
                   Welcome, {currentuser.name}
                 </Typography>
@@ -59,16 +66,21 @@ const Header = (props) => {
                   color="warning"
                   onClick={() => {
                     // remove cookie
-                    removeCookie("currentuser");
+                    removeCookie("currentuser", { path: "/" });
                     // redirect back to home page
                     navigate("/");
                   }}
-                  sx={{ mx: 2, order: { xs: 3, md: 3 } }}
+                  sx={{ mx: 2, order: { sm: 3, md: 3 } }}
                 >
                   <LogoutIcon sx={{ mr: 1 }} /> Logout
                 </Button>
               ) : (
-                <Button component={Link} to="/login" color="warning">
+                <Button
+                  component={Link}
+                  to="/login"
+                  color="warning"
+                  sx={{ mx: 2, order: { sm: 3, md: 3 } }}
+                >
                   <PersonOutlineIcon sx={{ mr: 1 }} /> Login
                 </Button>
               )}
@@ -84,7 +96,7 @@ const Header = (props) => {
                 "& > :not(style) ~ :not(style)": {
                   ml: 2,
                 },
-                mb: { xs: 3, md: 0 },
+                mb: { xs: 2, md: 0 },
               }}
             >
               <MuiLink

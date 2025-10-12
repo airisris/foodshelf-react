@@ -12,7 +12,6 @@ import Paper from "@mui/material/Paper";
 import { signUp } from "../utils/api_user";
 import { useNavigate } from "react-router";
 import { useCookies } from "react-cookie";
-import bg from "../assets/bg.jpg";
 import bg2 from "../assets/bg2.jpg";
 
 const SignupPage = () => {
@@ -46,7 +45,7 @@ const SignupPage = () => {
         navigate("/");
       } catch (error) {
         console.log(error);
-        toast.error(error.response.data.message);
+        console.log(error.response.data.message);
       }
     }
   };

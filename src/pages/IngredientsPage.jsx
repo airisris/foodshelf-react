@@ -54,7 +54,7 @@ export default function IngredientsPage() {
     }
   }, [location.search]);
 
-  // get all ingredients
+  // get all ingredients with any category
   useEffect(() => {
     getIngredients("All").then((data) => {
       setAllIngredients(data);
@@ -122,11 +122,12 @@ export default function IngredientsPage() {
       const allSupplies = await getAllSupplies(token);
       setSupplies(allSupplies);
       toast.success(`"${ingredient.name}" has been added to your supply`);
-      // }
     } catch (error) {
-      toast.error(error.message);
+      console.log(error.message);
     }
   };
+
+  console.log(ingredients);
 
   return (
     <>
@@ -167,15 +168,16 @@ export default function IngredientsPage() {
               />
             </SwiperSlide>
 
-            {[
-              "Fruit",
-              "Meat",
-              "Seafood",
-              "Vegetable",
-              "Dairy Product",
-              "Carb & Grain",
-            ].map((cat) => (
-              <SwiperSlide style={{ width: "auto" }}>
+            <SwiperSlide style={{ width: "auto" }}>
+              {[
+                "Fruit",
+                "Meat",
+                "Seafood",
+                "Vegetable",
+                "Dairy Product",
+                "Carb & Grain",
+                "Other",
+              ].map((cat) => (
                 <Chip
                   key={cat}
                   label={
@@ -191,8 +193,8 @@ export default function IngredientsPage() {
                   variant={category === cat ? "filled" : "outlined"}
                   sx={{ mr: 1 }}
                 />
-              </SwiperSlide>
-            ))}
+              ))}
+            </SwiperSlide>
           </Swiper>
 
           {currentuser && currentuser.role === "admin" ? (
@@ -201,13 +203,16 @@ export default function IngredientsPage() {
               color="warning"
               component={Link}
               to="/ingredients/new"
+              sx={{
+                minWidth: "130px",
+              }}
             >
               <AddIcon sx={{ mr: 1 }} /> Ingredient
             </Button>
           ) : null}
         </Box>
 
-        <Box sx={{ mx: "50px" }}>
+        <Box sx={{ mx: { xs: "10px", sm: "50px" } }}>
           <Divider />
           <Grid container spacing={1} sx={{ m: 4 }}>
             {ingredients.length === 0 ? (
@@ -331,6 +336,9 @@ export default function IngredientsPage() {
                   <Typography variant="body1" sx={{ mt: 1 }}>
                     {i.name}
                   </Typography>
+                  {category === "All" ? (
+                    <Chip size="small" label={i.category} sx={{ my: 1 }} />
+                  ) : null}
                 </Grid>
               ))
             )}
