@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
@@ -59,6 +60,28 @@ export default function IngredientAdd() {
     whiteSpace: "nowrap",
     width: 1,
   });
+
+  if (!currentuser || currentuser.role !== "admin") {
+    return (
+      <>
+        <Header />
+        <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          <Alert align="center" severity="error">
+            You Shall Not Pass
+          </Alert>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/"
+            sx={{ mt: 2 }}
+          >
+            Go Back
+          </Button>
+        </Container>
+      </>
+    );
+  }
 
   return (
     <>

@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { Button } from "@mui/material";
+import { Container } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Header from "../components/Header";
@@ -82,6 +83,28 @@ export default function SuppliesPage() {
       }
     });
   };
+
+  if (currentuser && currentuser.role === "admin") {
+    return (
+      <>
+        <Header />
+        <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          <Alert align="center" severity="error">
+            You Shall Not Pass
+          </Alert>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/"
+            sx={{ mt: 2 }}
+          >
+            Go Back
+          </Button>
+        </Container>
+      </>
+    );
+  }
 
   return (
     <>

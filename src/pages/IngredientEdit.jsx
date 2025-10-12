@@ -4,6 +4,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Autocomplete, TextField } from "@mui/material";
+import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -27,7 +28,6 @@ export default function IngredientEdit() {
   const [cookies] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
   const { token = "" } = currentuser;
-  const [error, setError] = useState(null);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
@@ -45,12 +45,12 @@ export default function IngredientEdit() {
           setImage(ingredientData ? ingredientData.image : null);
         } else {
           // if not availabke, set error message
-          setError("Ingredient not found");
+          console.log("Ingredient not found");
         }
       })
       .catch((error) => {
         // catch the API error
-        setError("Ingredient not found");
+        console.log("Ingredient not found");
       });
   }, [id]);
 
@@ -84,17 +84,22 @@ export default function IngredientEdit() {
     width: 1,
   });
 
-  // if error, return the error
-  if (error) {
+  if (!currentuser || currentuser.role !== "admin") {
     return (
       <>
         <Header />
-        <Container maxWidth="sm" sx={{ textAlign: "center" }}>
-          <Typography variant="h4" align="center" mb={2} color="error">
-            {error}
-          </Typography>
-          <Button variant="contained" color="primary" component={Link} to="/">
-            Go back to home
+        <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          <Alert align="center" severity="error">
+            You Shall Not Pass
+          </Alert>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/"
+            sx={{ mt: 2 }}
+          >
+            Go Back
           </Button>
         </Container>
       </>

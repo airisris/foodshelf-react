@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Autocomplete, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Paper from "@mui/material/Paper";
@@ -80,6 +81,28 @@ export default function RecipeAdd() {
     whiteSpace: "nowrap",
     width: 1,
   });
+
+  if (!currentuser || currentuser.role !== "admin") {
+    return (
+      <>
+        <Header />
+        <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          <Alert align="center" severity="error">
+            You Shall Not Pass
+          </Alert>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/"
+            sx={{ mt: 2 }}
+          >
+            Go Back
+          </Button>
+        </Container>
+      </>
+    );
+  }
 
   return (
     <>

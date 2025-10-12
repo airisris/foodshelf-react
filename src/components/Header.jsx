@@ -66,7 +66,7 @@ const Header = (props) => {
                   color="warning"
                   onClick={() => {
                     // remove cookie
-                    removeCookie("currentuser", { path: "/" });
+                    removeCookie("currentuser");
                     // redirect back to home page
                     navigate("/");
                   }}

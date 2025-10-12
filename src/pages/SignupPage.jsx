@@ -1,8 +1,10 @@
+import { Link } from "react-router";
 import Header from "../components/Header";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
-import { Link } from "@mui/material";
+import MuiLink from "@mui/material/Link";
+import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useState } from "react";
@@ -17,6 +19,8 @@ import bg2 from "../assets/bg2.jpg";
 const SignupPage = () => {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies(["currentuser"]);
+  const { currentuser = {} } = cookies;
+  const { token = "" } = currentuser;
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,6 +53,28 @@ const SignupPage = () => {
       }
     }
   };
+
+  if (token) {
+    return (
+      <>
+        <Header />
+        <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          <Alert align="center" severity="error">
+            You Shall Not Pass
+          </Alert>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/"
+            sx={{ mt: 2 }}
+          >
+            Go Back
+          </Button>
+        </Container>
+      </>
+    );
+  }
 
   return (
     <>
@@ -138,7 +164,7 @@ const SignupPage = () => {
                 }}
               >
                 <Typography>Already have an account?</Typography>
-                <Link
+                <MuiLink
                   href="/login"
                   sx={{
                     marginRight: "8px",
@@ -151,7 +177,7 @@ const SignupPage = () => {
                   }}
                 >
                   Log in
-                </Link>
+                </MuiLink>
               </Box>
             </Paper>
           </Container>

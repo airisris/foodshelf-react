@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import Header from "../components/Header";
 import { Container } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -25,8 +26,13 @@ import Swal from "sweetalert2";
 import { toast } from "sonner";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import { useCookies } from "react-cookie";
+import Alert from "@mui/material/Alert";
 
 export default function CategoriesPage() {
+  const [cookies] = useCookies(["currentuser"]);
+  const { currentuser = {} } = cookies;
+  const { email, token = "" } = currentuser;
   const [categories, setCategories] = useState("");
   const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
@@ -110,6 +116,28 @@ export default function CategoriesPage() {
       }
     });
   };
+
+  if (!currentuser || currentuser.role !== "admin") {
+    return (
+      <>
+        <Header />
+        <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          <Alert align="center" severity="error">
+            You Shall Not Pass
+          </Alert>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/"
+            sx={{ mt: 2 }}
+          >
+            Go Back
+          </Button>
+        </Container>
+      </>
+    );
+  }
 
   return (
     <>
