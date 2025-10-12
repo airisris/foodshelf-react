@@ -13,6 +13,7 @@ import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import { Autocomplete, TextField } from "@mui/material";
@@ -32,6 +33,7 @@ export default function SuppliesPage() {
   const { email, token = "" } = currentuser;
   const [open, setOpen] = useState(false);
   const [supply, setSupply] = useState([]);
+  const [search, setSearch] = useState("");
   // to store data from /supplies
   const [supplies, setSupplies] = useState([]);
   const [category, setCategory] = useState("All");
@@ -39,10 +41,10 @@ export default function SuppliesPage() {
 
   // get all ingredients
   useEffect(() => {
-    getIngredients("All").then((data) => {
+    getIngredients(search, "All").then((data) => {
       setAllIngredients(data);
     });
-  }, []);
+  }, [search]);
 
   // get all supplies
   useEffect(() => {
@@ -113,11 +115,32 @@ export default function SuppliesPage() {
         <Box
           sx={{
             display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <TextField
+            size="small"
+            placeholder="Search"
+            color="#000000"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            sx={{
+              bgcolor: "white",
+              borderRadius: "50px",
+              minWidth: { xs: "270px", sm: "400px" },
+            }}
+          />
+          <SearchIcon sx={{ py: "20px", px: "10px" }} color="warning" />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
             overflow: "hidden",
             px: { xs: 2, md: 6 },
-            minHeight: "70px",
+            minHeight: "50px",
           }}
         >
           <Swiper
@@ -215,7 +238,12 @@ export default function SuppliesPage() {
             ) : (
               supplies.map((s) =>
                 s.ingredient
-                  .filter((i) => category === "All" || i.category === category)
+                  .filter(
+                    (i) =>
+                      (category === "All" || i.category === category) &&
+                      // search filter
+                      i.name.toLowerCase().includes(search.toLowerCase())
+                  )
                   .map((i) => (
                     <Grid
                       key={i._id}

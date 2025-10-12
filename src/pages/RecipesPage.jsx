@@ -88,10 +88,10 @@ export default function RecipesPage() {
 
   // get all recipes
   useEffect(() => {
-    getRecipes("All", ingredients).then((data) => {
+    getRecipes("All", []).then((data) => {
       setAllRecipes(data);
     });
-  }, [ingredients]);
+  }, []);
 
   console.log("Fetching recipes:" + recipes);
   console.log("Fetching recipes with:", { category, ingredients });

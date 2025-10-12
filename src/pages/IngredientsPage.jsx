@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 import { Button } from "@mui/material";
+import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Header from "../components/Header";
@@ -10,6 +11,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import KitchenIcon from "@mui/icons-material/Kitchen";
 import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
 import Alert from "@mui/material/Alert";
 import Divider from "@mui/material/Divider";
 import Card from "@mui/material/Card";
@@ -36,6 +38,7 @@ export default function IngredientsPage() {
   const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
   const { email, token = "" } = currentuser;
   const [category, setCategory] = useState("All");
+  const [search, setSearch] = useState("");
   const [supply, setSupply] = useState([]);
   const [recipe, setRecipe] = useState([]);
   // to store data from /ingredients
@@ -56,17 +59,17 @@ export default function IngredientsPage() {
 
   // get all ingredients with any category
   useEffect(() => {
-    getIngredients("All").then((data) => {
+    getIngredients("", "All").then((data) => {
       setAllIngredients(data);
     });
   }, []);
 
   // get all ingredients
   useEffect(() => {
-    getIngredients(category).then((data) => {
+    getIngredients(search, category).then((data) => {
       setIngredients(data);
     });
-  }, [category]);
+  }, [search, category]);
 
   // get all supplies
   useEffect(() => {
@@ -136,12 +139,33 @@ export default function IngredientsPage() {
         <Box
           sx={{
             display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <TextField
+            size="small"
+            placeholder="Search"
+            color="#000000"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            sx={{
+              bgcolor: "white",
+              borderRadius: "50px",
+              minWidth: { xs: "270px", sm: "400px" },
+            }}
+          />
+          <SearchIcon sx={{ py: "20px", px: "10px" }} color="warning" />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
             overflow: "hidden",
             gap: 2,
             px: { xs: 2, md: 6 },
-            minHeight: "70px",
+            minHeight: "50px",
           }}
         >
           <Swiper
