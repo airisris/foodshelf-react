@@ -15,6 +15,8 @@ import Divider from "@mui/material/Divider";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import Swal from "sweetalert2";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
 import { API_URL } from "../utils/constants";
 import { toast } from "sonner";
 import { useLocation } from "react-router";
@@ -135,24 +137,36 @@ export default function IngredientsPage() {
             display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
+            overflow: "hidden",
+            gap: 2,
+            px: { xs: 2, md: 6 },
+            minHeight: "70px",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "70px",
+          <Swiper
+            slidesPerView="auto"
+            spaceBetween={10}
+            pagination={{
+              clickable: true,
+            }}
+            modules={[Pagination]}
+            style={{
+              width: "fit-content",
+              padding: "10px 0",
+              "--swiper-pagination-color": "#FF8C42",
             }}
           >
-            <Chip
-              label={"All (" + allIngredients.length + ")"}
-              onClick={() => {
-                setCategory("All");
-              }}
-              variant={category === "All" ? "filled" : "outlined"}
-              sx={{ mr: 1 }}
-            />
+            <SwiperSlide style={{ width: "auto" }}>
+              <Chip
+                label={"All (" + allIngredients.length + ")"}
+                onClick={() => {
+                  setCategory("All");
+                }}
+                variant={category === "All" ? "filled" : "outlined"}
+                sx={{ mr: 1 }}
+              />
+            </SwiperSlide>
+
             {[
               "Fruit",
               "Meat",
@@ -161,22 +175,25 @@ export default function IngredientsPage() {
               "Dairy Product",
               "Carb & Grain",
             ].map((cat) => (
-              <Chip
-                key={cat}
-                label={
-                  cat +
-                  " (" +
-                  allIngredients.filter((ing) => ing.category === cat).length +
-                  ")"
-                }
-                onClick={() => {
-                  setCategory(cat);
-                }}
-                variant={category === cat ? "filled" : "outlined"}
-                sx={{ mr: 1 }}
-              />
+              <SwiperSlide style={{ width: "auto" }}>
+                <Chip
+                  key={cat}
+                  label={
+                    cat +
+                    " (" +
+                    allIngredients.filter((ing) => ing.category === cat)
+                      .length +
+                    ")"
+                  }
+                  onClick={() => {
+                    setCategory(cat);
+                  }}
+                  variant={category === cat ? "filled" : "outlined"}
+                  sx={{ mr: 1 }}
+                />
+              </SwiperSlide>
             ))}
-          </Box>
+          </Swiper>
 
           {currentuser && currentuser.role === "admin" ? (
             <Button
@@ -210,7 +227,7 @@ export default function IngredientsPage() {
               ingredients.map((i) => (
                 <Grid
                   key={i._id}
-                  size={{ xs: 6, md: 4, lg: 2 }}
+                  size={{ xs: 6, sm: 4, md: 3, lg: 2 }}
                   sx={{
                     display: "flex",
                     flexDirection: "column",
@@ -292,9 +309,11 @@ export default function IngredientsPage() {
                               bgcolor: "#ff6200ff",
                             },
                           }}
-                          disabled={(supply.find((s) =>
-                            s.ingredient.find((ing) => ing._id === i._id)
-                          )) || !token}
+                          disabled={
+                            supply.find((s) =>
+                              s.ingredient.find((ing) => ing._id === i._id)
+                            ) || !token
+                          }
                         >
                           <KitchenIcon
                             fontSize="small"

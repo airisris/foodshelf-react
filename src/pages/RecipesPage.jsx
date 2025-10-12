@@ -15,6 +15,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Alert from "@mui/material/Alert";
 import Divider from "@mui/material/Divider";
 import Swal from "sweetalert2";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
 import { API_URL } from "../utils/constants";
 import { toast } from "sonner";
 import { useLocation } from "react-router";
@@ -126,43 +128,63 @@ export default function RecipesPage() {
             display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
+            overflow: "hidden",
+            gap: 2,
+            px: { xs: 2, md: 6 },
+            minHeight: "70px",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "70px",
+          <Swiper
+            slidesPerView="auto"
+            spaceBetween={10}
+            pagination={{
+              clickable: true,
+            }}
+            modules={[Pagination]}
+            style={{
+              width: "fit-content",
+              padding: "10px 0",
+              "--swiper-pagination-color": "#FF8C42",
             }}
           >
-            <Chip
-              label={"All (" + allRecipes.length + ")"}
-              onClick={() => {
-                setCategory("All");
-              }}
-              variant={category === "All" ? "filled" : "outlined"}
-              sx={{ mr: 1 }}
-            />
-            {categories.map((cat) => (
+            <SwiperSlide style={{ width: "auto" }}>
               <Chip
-                key={cat._id}
-                label={
-                  cat.name +
-                  " (" +
-                  allRecipes.filter((r) => r.category._id === cat._id).length +
-                  ")"
-                }
+                label={"All (" + allRecipes.length + ")"}
                 onClick={() => {
-                  setCategory(cat._id);
+                  setCategory("All");
                 }}
-                variant={category === cat._id ? "filled" : "outlined"}
+                variant={category === "All" ? "filled" : "outlined"}
                 sx={{ mr: 1 }}
               />
+            </SwiperSlide>
+
+            {categories.map((cat) => (
+              <SwiperSlide style={{ width: "auto" }}>
+                <Chip
+                  key={cat._id}
+                  label={
+                    cat.name +
+                    " (" +
+                    allRecipes.filter((r) => r.category._id === cat._id)
+                      .length +
+                    ")"
+                  }
+                  onClick={() => {
+                    setCategory(cat._id);
+                  }}
+                  variant={category === cat._id ? "filled" : "outlined"}
+                  sx={{ mr: 1 }}
+                />
+              </SwiperSlide>
             ))}
-          </Box>
+          </Swiper>
           {currentuser && currentuser.role === "admin" ? (
-            <Button variant="contained" color="warning" component={Link} to="/recipes/new">
+            <Button
+              variant="contained"
+              color="warning"
+              component={Link}
+              to="/recipes/new"
+            >
               <AddIcon sx={{ mr: 1 }} /> Recipe
             </Button>
           ) : null}
@@ -188,14 +210,22 @@ export default function RecipesPage() {
               recipes.map((r) => (
                 <Grid
                   key={r._id}
-                  size={{ xs: 6, md: 4, lg: 3 }}
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "center",
+                    alignItems: "stretch",
                   }}
                 >
-                  <Card sx={{ maxWidth: 345, minHeight: 415 }}>
+                  <Card
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      height: "100%",
+                      minHeight: 415,
+                    }}
+                  >
                     <CardMedia
                       sx={{ height: 200 }}
                       // image={API_URL + r.image}

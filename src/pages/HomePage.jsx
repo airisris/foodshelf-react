@@ -19,6 +19,8 @@ import dessert from "../assets/dessert.png";
 import moreFood from "../assets/moreFood.png";
 import bannerWaste from "../assets/bannerWaste.png";
 import bannerDiwali from "../assets/bannerDiwali.png";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { getIngredients } from "../utils/api_ingredients";

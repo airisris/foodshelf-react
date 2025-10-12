@@ -12,6 +12,8 @@ import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import DeleteIcon from "@mui/icons-material/Delete";
 import IconButton from "@mui/material/IconButton";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
 import { Autocomplete, TextField } from "@mui/material";
 import Swal from "sweetalert2";
 import { API_URL } from "../utils/constants";
@@ -90,52 +92,65 @@ export default function SuppliesPage() {
             display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
+            overflow: "hidden",
+            px: { xs: 2, md: 6 },
+            minHeight: "70px",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "70px",
+          <Swiper
+            slidesPerView="auto"
+            spaceBetween={10}
+            pagination={{
+              clickable: true,
+            }}
+            modules={[Pagination]}
+            style={{
+              width: "fit-content",
+              padding: "10px 0",
+              "--swiper-pagination-color": "#FF8C42",
             }}
           >
-            <Chip
-              label={
-                "All (" + supplies.flatMap((s) => s.ingredient).length + ")"
-              }
-              onClick={() => {
-                setCategory("All");
-              }}
-              variant={category === "All" ? "filled" : "outlined"}
-              sx={{ mr: 1 }}
-            />
-            {[
-              "Fruit",
-              "Meat",
-              "Seafood",
-              "Vegetable",
-              "Dairy Product",
-              "Carb & Grain",
-            ].map((cat) => (
+            <SwiperSlide style={{ width: "auto" }}>
               <Chip
-                key={cat}
                 label={
-                  cat +
-                  " (" +
-                  supplies
-                    .flatMap((s) => s.ingredient)
-                    .filter((ing) => ing.category === cat).length +
-                  ")"
+                  "All (" + supplies.flatMap((s) => s.ingredient).length + ")"
                 }
                 onClick={() => {
-                  setCategory(cat);
+                  setCategory("All");
                 }}
-                variant={category === cat ? "filled" : "outlined"}
+                variant={category === "All" ? "filled" : "outlined"}
                 sx={{ mr: 1 }}
               />
-            ))}
-          </Box>
+            </SwiperSlide>
+
+            <SwiperSlide style={{ width: "auto" }}>
+              {[
+                "Fruit",
+                "Meat",
+                "Seafood",
+                "Vegetable",
+                "Dairy Product",
+                "Carb & Grain",
+              ].map((cat) => (
+                <Chip
+                  key={cat}
+                  label={
+                    cat +
+                    " (" +
+                    supplies
+                      .flatMap((s) => s.ingredient)
+                      .filter((ing) => ing.category === cat).length +
+                    ")"
+                  }
+                  onClick={() => {
+                    setCategory(cat);
+                  }}
+                  variant={category === cat ? "filled" : "outlined"}
+                  sx={{ mr: 1 }}
+                />
+              ))}
+            </SwiperSlide>
+          </Swiper>
         </Box>
 
         <Box sx={{ mx: "50px" }}>
@@ -180,7 +195,7 @@ export default function SuppliesPage() {
                   .map((i) => (
                     <Grid
                       key={i._id}
-                      size={{ xs: 6, md: 4, lg: 2 }}
+                      size={{ xs: 6, sm: 4, md: 3, lg: 2 }}
                       sx={{
                         display: "flex",
                         flexDirection: "column",
