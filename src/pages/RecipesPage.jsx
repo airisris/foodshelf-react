@@ -13,6 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Alert from "@mui/material/Alert";
+import Divider from "@mui/material/Divider";
 import Swal from "sweetalert2";
 import { API_URL } from "../utils/constants";
 import { toast } from "sonner";
@@ -119,176 +120,168 @@ export default function RecipesPage() {
   return (
     <>
       <Header current="recipes" />
-      <Box sx={{ mx: "50px" }}>
+      <Box sx={{ bgcolor: "#f8f8f8", minHeight: "85vh" }}>
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "space-around",
             alignItems: "center",
-            mx: "200px",
           }}
         >
-          <Chip
-            label={"All (" + allRecipes.length + ")"}
-            onClick={() => {
-              setCategory("All");
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "70px",
             }}
-            variant={category === "All" ? "filled" : "outlined"}
-          />
-          {categories.map((cat) => (
+          >
             <Chip
-              key={cat._id}
-              label={
-                cat.name +
-                " (" +
-                allRecipes.filter((r) => r.category._id === cat._id).length +
-                ")"
-              }
+              label={"All (" + allRecipes.length + ")"}
               onClick={() => {
-                setCategory(cat._id);
+                setCategory("All");
               }}
-              variant={category === cat._id ? "filled" : "outlined"}
+              variant={category === "All" ? "filled" : "outlined"}
+              sx={{ mr: 1 }}
             />
-          ))}
+            {categories.map((cat) => (
+              <Chip
+                key={cat._id}
+                label={
+                  cat.name +
+                  " (" +
+                  allRecipes.filter((r) => r.category._id === cat._id).length +
+                  ")"
+                }
+                onClick={() => {
+                  setCategory(cat._id);
+                }}
+                variant={category === cat._id ? "filled" : "outlined"}
+                sx={{ mr: 1 }}
+              />
+            ))}
+          </Box>
+          {currentuser && currentuser.role === "admin" ? (
+            <Button variant="contained" color="warning" component={Link} to="/recipes/new">
+              <AddIcon sx={{ mr: 1 }} /> Recipe
+            </Button>
+          ) : null}
         </Box>
 
-        <Grid container spacing={1} sx={{ m: 4 }}>
-          {currentuser && currentuser.role === "admin" ? (
-            <Grid
-              size={{ xs: 6, md: 4, lg: 3 }}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Box
-                component={Link}
-                to="/recipes/new"
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: 150,
-                  height: 150,
-                  borderRadius: "10%",
-                  border: 2,
-                  borderColor: "black",
-                }}
-              >
-                <AddIcon />
-              </Box>
-            </Grid>
-          ) : null}
-
-          {recipes.length === 0 ? (
-            <Grid
-              size={{ xs: 6, md: 8, lg: 9 }}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Alert severity="info" sx={{ px: 5 }}>
-                No Recipes Found
-              </Alert>
-            </Grid>
-          ) : (
-            recipes.map((r) => (
+        <Box sx={{ mx: "50px" }}>
+          <Divider />
+          <Grid container spacing={1} sx={{ m: 4 }}>
+            {recipes.length === 0 ? (
               <Grid
-                key={r._id}
-                size={{ xs: 6, md: 4, lg: 3 }}
+                size={{ xs: 12 }}
                 sx={{
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Card sx={{ maxWidth: 345, minHeight: 415 }}>
-                  <CardMedia
-                    sx={{ height: 200 }}
-                    // image={API_URL + r.image}
-                    component="img"
-                    src={API_URL + r.image}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      {r.name}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{ color: "text.secondary" }}
-                    >
-                      {r.instruction.split(" ").slice(0, 15).join(" ")}...
-                    </Typography>
-                    {ingredients.length > 0
-                      ? (() => {
-                          // find ingredients that the user doesn't have on each recipes
-                          const notMatch = r.ingredients.filter(
-                            (ing) => !ingredients.includes(ing._id)
-                          );
-
-                          // if have, display them
-                          if (notMatch.length > 0) {
-                            return (
-                              <Alert severity="info" sx={{ mt: 1 }}>
-                                You don't have:{" "}
-                                {notMatch.map((ing) => ing.name).join(", ")}
-                              </Alert>
-                            );
-                          }
-                        })()
-                      : // immediately calling the function
-                        null}
-                  </CardContent>
-                  <CardActions
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Button
-                      component={Link}
-                      to={`/recipes/${r._id}`}
-                      size="small"
-                    >
-                      View Recipe
-                    </Button>
-                    {currentuser.role === "admin" ? (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
+                <Alert severity="info" sx={{ px: 5 }}>
+                  No Recipes Found
+                </Alert>
+              </Grid>
+            ) : (
+              recipes.map((r) => (
+                <Grid
+                  key={r._id}
+                  size={{ xs: 6, md: 4, lg: 3 }}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Card sx={{ maxWidth: 345, minHeight: 415 }}>
+                    <CardMedia
+                      sx={{ height: 200 }}
+                      // image={API_URL + r.image}
+                      component="img"
+                      src={API_URL + r.image}
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {r.name}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.secondary" }}
                       >
+                        {r.instruction.split(" ").slice(0, 15).join(" ")}...
+                      </Typography>
+                      {ingredients.length > 0
+                        ? (() => {
+                            // find ingredients that the user doesn't have on each recipes
+                            const notMatch = r.ingredients.filter(
+                              (ing) => !ingredients.includes(ing._id)
+                            );
+
+                            // if have, display them
+                            if (notMatch.length > 0) {
+                              return (
+                                <Alert severity="info" sx={{ mt: 1 }}>
+                                  You're missing:{" "}
+                                  {notMatch.map((ing) => ing.name).join(", ")}
+                                </Alert>
+                              );
+                            }
+                          })()
+                        : // immediately calling the function
+                          null}
+                    </CardContent>
+                    <CardActions
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Button
+                        component={Link}
+                        color="warning"
+                        variant="outlined"
+                        to={`/recipes/${r._id}`}
+                        size="small"
+                      >
+                        View Recipe
+                      </Button>
+                      {currentuser.role === "admin" ? (
                         <Box
-                          component={Link}
-                          to={`/recipes/${r._id}/edit`}
-                          variant="contained"
-                          sx={{ borderRadius: 5, mx: 2 }}
-                        >
-                          <EditIcon fontSize="small" color="info" />
-                        </Box>
-                        <Box
-                          variant="contained"
-                          sx={{ borderRadius: 5 }}
-                          onClick={() => {
-                            handleProductDelete(r._id);
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
                           }}
                         >
-                          <DeleteIcon fontSize="small" color="error" />
+                          <Box
+                            component={Link}
+                            to={`/recipes/${r._id}/edit`}
+                            variant="contained"
+                            sx={{ borderRadius: 5, mx: 2 }}
+                          >
+                            <EditIcon fontSize="small" color="info" />
+                          </Box>
+                          <Box
+                            variant="contained"
+                            sx={{ borderRadius: 5 }}
+                            onClick={() => {
+                              handleProductDelete(r._id);
+                            }}
+                          >
+                            <DeleteIcon fontSize="small" color="error" />
+                          </Box>
                         </Box>
-                      </Box>
-                    ) : null}
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))
-          )}
-        </Grid>
+                      ) : null}
+                    </CardActions>
+                  </Card>
+                </Grid>
+              ))
+            )}
+          </Grid>
+        </Box>
       </Box>
     </>
   );

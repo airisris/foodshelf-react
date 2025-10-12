@@ -10,6 +10,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useState, useEffect } from "react";
 import {
   createCategory,
@@ -112,151 +114,156 @@ export default function CategoriesPage() {
   return (
     <>
       <Header current="categories" />
-      <Box sx={{ mx: "50px" }}>
-        <Container maxWidth="md">
-          <Typography variant="h5" sx={{ fontWeight: "bold", py: 3 }}>
-            Categories
-          </Typography>
-          <Paper
-            variant="outlined"
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "10px",
-              p: 2,
-            }}
-          >
-            <TextField
-              label="Category Name"
-              fullWidth
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <Button
-              color="primary"
-              variant="contained"
-              sx={{ p: 2 }}
-              onClick={handleSubmit}
-            >
-              ADD
-            </Button>
-          </Paper>
-          <TableContainer>
-            <Table sx={{ minWidth: 650, my: 2 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {categories.length === 0 ? (
-                  <TableRow
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell component="th" scope="row">
-                      No Categories Added Yet!
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  categories.map((c) => (
-                    <TableRow
-                      key={c._id}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        sx={{ minWidth: "300px" }}
-                      >
-                        {c.name}
-                      </TableCell>
-                      <TableCell sx={{ display: "flex", gap: "10px" }}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() => {
-                            setOpen(true);
-                            // pass in the id and label
-                            setSelectedCatID(c._id);
-                            setSelectedCatName(c.name);
-                          }}
-                          disabled={recipe.some(
-                            (r) => r.category._id === c._id
-                          )}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          onClick={() => {
-                            handleCategoryDelete(c._id);
-                          }}
-                          disabled={recipe.some(
-                            (r) => r.category._id === c._id
-                          )}
-                        >
-                          Delete
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Modal open={open} onClose={() => setOpen(false)}>
-            <Box
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: 400,
-                bgcolor: "background.paper",
-                border: "2px solid #000",
-                boxShadow: 24,
-                p: 4,
-              }}
-            >
-              <TextField
-                fullWidth
-                label="Category"
+      <Box sx={{ bgcolor: "#f8f8f8", minHeight: "85vh" }}>
+        <Box sx={{ mx: "50px" }}>
+          <Container maxWidth="sm">
+            <Box sx={{ pt: 1 }}>
+              <Paper
                 variant="outlined"
-                value={selectedCatName}
-                onChange={(event) => setSelectedCatName(event.target.value)}
-              />
-              <Box
                 sx={{
+                  mt: 2,
                   display: "flex",
-                  justifyContent: "flex-end",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                   gap: "10px",
-                  pt: 2,
+                  p: 2,
                 }}
               >
-                {" "}
+                <TextField
+                  label="Category Name"
+                  fullWidth
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
                 <Button
-                  color="primary"
+                  color="warning"
+                  variant="contained"
+                  sx={{ p: 2 }}
+                  onClick={handleSubmit}
+                >
+                  ADD
+                </Button>
+              </Paper>
+            </Box>
+
+            <TableContainer sx={{ my: 1 }}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                      Actions
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {categories.length === 0 ? (
+                    <TableRow
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        No Categories Added Yet!
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    categories.map((c) => (
+                      <TableRow key={c._id}>
+                        <TableCell component="th" scope="row">
+                          {c.name}
+                        </TableCell>
+                        <TableCell
+                          align="right"
+                          sx={{
+                            display: "flex",
+                            gap: "10px",
+                          }}
+                        >
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => {
+                              setOpen(true);
+                              // pass in the id and label
+                              setSelectedCatID(c._id);
+                              setSelectedCatName(c.name);
+                            }}
+                            disabled={recipe.some(
+                              (r) => r.category._id === c._id
+                            )}
+                          >
+                            <EditIcon fontSize="small" sx={{ mr: 1 }} /> Edit
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={() => {
+                              handleCategoryDelete(c._id);
+                            }}
+                            disabled={recipe.some(
+                              (r) => r.category._id === c._id
+                            )}
+                          >
+                            <DeleteIcon fontSize="small" sx={{ mr: 1 }} />
+                            Delete
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Modal open={open} onClose={() => setOpen(false)}>
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: 400,
+                  bgcolor: "background.paper",
+                  borderRadius: 1,
+                  boxShadow: 24,
+                  p: 4,
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="Category"
                   variant="outlined"
-                  onClick={() => {
-                    setOpen(false);
+                  value={selectedCatName}
+                  onChange={(event) => setSelectedCatName(event.target.value)}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: "10px",
+                    pt: 2,
                   }}
                 >
-                  Close
-                </Button>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  onClick={handleUpdate}
-                >
-                  Update
-                </Button>
+                  {" "}
+                  <Button
+                    color="error"
+                    variant="outlined"
+                    onClick={() => {
+                      setOpen(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={handleUpdate}
+                  >
+                    Update
+                  </Button>
+                </Box>
               </Box>
-            </Box>
-          </Modal>
-        </Container>
+            </Modal>
+          </Container>
+        </Box>
       </Box>
     </>
   );

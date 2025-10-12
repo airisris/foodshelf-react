@@ -48,13 +48,13 @@ body {
 
 .title {
   box-shadow: inset 0 0 0 0 #f4511e;
-  color: #f4511e;
+  color: "black";
   margin: 0 -.25rem;
   padding: 0 .25rem;
   transition: color .3s ease-in-out, box-shadow .3s ease-in-out;
 }
 
 .title:hover {
-  box-shadow: inset 180px 0 0 0 #f4511e;
+  box-shadow: inset 225px 0 0 0 #f4511e;
   color: white;
 }

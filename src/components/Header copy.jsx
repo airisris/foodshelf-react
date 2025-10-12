@@ -145,3 +145,42 @@ const handleAddSupply = async (id) => {
       toast.error(error.message);
     }
   };
+
+  {currentuser && currentuser.role === "admin" ? (
+                <Grid
+                  size={{ xs: 6, md: 4, lg: 3 }}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Card sx={{ width: 270, maxWidth: 345, minHeight: 415 }}>
+                    <CardContent
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100%",
+                      }}
+                    >
+                      <AddIcon />
+                    </CardContent>
+                  </Card>
+                  {/* <Box
+                    component={Link}
+                    to="/recipes/new"
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: 270,
+                      height: 415,
+                      borderRadius: 1,
+                      bgcolor: "white"
+                    }}
+                  >
+                    <AddIcon />
+                  </Box> */}
+                </Grid>
+              ) : null}

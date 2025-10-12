@@ -82,119 +82,125 @@ export default function RecipeAdd() {
   return (
     <>
       <Header />
-      <Box sx={{ mx: "50px" }}>
-        <Container maxWidth="md">
-          <Paper elevation={2} sx={{ p: 2 }}>
-            <Typography variant="h4" align="center" my={3}>
-              Add New Recipe
-            </Typography>
-            <Box mb={2}>
-              <TextField
-                label="Name"
-                fullWidth
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Box>
-            <Box mb={2}>
-              <TextField
-                label="Instruction"
-                multiline
-                rows={4}
-                fullWidth
-                value={instruction}
-                onChange={(e) => setInstruction(e.target.value)}
-              />
-            </Box>
-            <Box mb={2}>
-              <FormControl sx={{ width: "100%" }}>
-                <InputLabel
-                  id="demo-simple-select-label"
-                  sx={{ bgcolor: "white", pr: "5px" }}
-                >
-                  Category
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={category}
-                  label="Category"
-                  onChange={(event) => {
-                    setCategory(event.target.value);
-                  }}
-                >
-                  {categories.map((cat) => (
-                    <MenuItem value={cat._id}>{cat.name}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-            <Box mb={2}>
-              <Autocomplete
-                multiple
-                options={ingredients}
-                getOptionLabel={(option) => option.name}
-                value={ingredient}
-                onChange={(e, newValue) => setIngredient(newValue)}
-                renderInput={(params) => (
+      <Box sx={{ bgcolor: "#f8f8f8", minHeight: "85vh" }}>
+        <Box sx={{ mx: "50px" }}>
+          <Container maxWidth="md">
+            <Box sx={{ py: 1 }}>
+              <Paper variant="outlined" sx={{ p: 2, py: 4, my: 2 }}>
+                <Typography variant="h4" align="center" sx={{ mb: 3 }}>
+                  Add New Recipe
+                </Typography>
+                <Box mb={2}>
                   <TextField
-                    {...params}
-                    label="Ingredients"
-                    placeholder="Search..."
+                    label="Name"
+                    color="#000000"
+                    fullWidth
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
-                )}
-              />
-            </Box>
-            <Box
-              mb={2}
-              sx={{ display: "flex", gap: "10px", alignItems: "center" }}
-            >
-              {image ? (
-                <>
-                  <img src={API_URL + image} width="100px" />
-                  <Button
-                    color="info"
-                    variant="contained"
-                    size="small"
-                    onClick={() => setImage(null)}
-                  >
-                    Remove
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<CloudUploadIcon />}
+                </Box>
+                <Box mb={2}>
+                  <TextField
+                    label="Instruction"
+                    color="#000000"
+                    multiline
+                    rows={4}
+                    fullWidth
+                    value={instruction}
+                    onChange={(e) => setInstruction(e.target.value)}
+                  />
+                </Box>
+                <Box mb={2}>
+                  <FormControl sx={{ width: "100%" }} color="#000000">
+                    <InputLabel
+                      id="demo-simple-select-label"
+                      sx={{ bgcolor: "white", pr: "5px" }}
+                    >
+                      Category
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={category}
+                      label="Category"
+                      onChange={(event) => {
+                        setCategory(event.target.value);
+                      }}
+                    >
+                      {categories.map((cat) => (
+                        <MenuItem value={cat._id}>{cat.name}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+                <Box mb={2}>
+                  <Autocomplete
+                    multiple
+                    options={ingredients}
+                    getOptionLabel={(option) => option.name}
+                    value={ingredient}
+                    onChange={(e, newValue) => setIngredient(newValue)}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Ingredients"
+                        color="#000000"
+                        placeholder="Search..."
+                      />
+                    )}
+                  />
+                </Box>
+                <Box
+                  mb={2}
+                  sx={{ display: "flex", gap: "10px", alignItems: "center" }}
                 >
-                  Upload image
-                  <VisuallyHiddenInput
-                    type="file"
-                    onChange={async (event) => {
-                      const data = await uploadImage(event.target.files[0]);
-                      // { image_url: "uploads/image.jpg" }
-                      // set the image url into state
-                      setImage(data.image_url);
-                    }}
-                    accept="image/*"
-                  />
+                  {image ? (
+                    <>
+                      <img src={API_URL + image} width="100px" />
+                      <Button
+                        color="error"
+                        variant="outlined"
+                        size="small"
+                        onClick={() => setImage(null)}
+                      >
+                        Remove
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      component="label"
+                      role={undefined}
+                      variant="outlined"
+                      color="warning"
+                      tabIndex={-1}
+                      startIcon={<CloudUploadIcon />}
+                    >
+                      Upload image
+                      <VisuallyHiddenInput
+                        type="file"
+                        onChange={async (event) => {
+                          const data = await uploadImage(event.target.files[0]);
+                          // { image_url: "uploads/image.jpg" }
+                          // set the image url into state
+                          setImage(data.image_url);
+                        }}
+                        accept="image/*"
+                      />
+                    </Button>
+                  )}
+                </Box>
+                <Button
+                  variant="contained"
+                  color="warning"
+                  fullWidth
+                  onClick={handleFormSubmit}
+                >
+                  Submit
                 </Button>
-              )}
+              </Paper>
             </Box>
-            <Box mb={2}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={handleFormSubmit}
-              >
-                Submit
-              </Button>
-            </Box>
-          </Paper>
-        </Container>
+          </Container>
+        </Box>
       </Box>
     </>
   );

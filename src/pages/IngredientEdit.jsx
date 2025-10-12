@@ -102,100 +102,110 @@ export default function IngredientEdit() {
   return (
     <>
       <Header />
-      <Box sx={{ mx: "50px" }}>
-        <Container maxWidth="md">
-          <Paper elevation={2} sx={{ p: 2 }}>
-            <Typography variant="h4" align="center" my={3}>
-              Update Ingredient
-            </Typography>
-            <Box mb={2}>
-              <TextField
-                label="Name"
-                fullWidth
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Box>
-            <Box mb={2}>
-              <FormControl sx={{ width: "100%" }}>
-                <InputLabel
-                  id="demo-simple-select-label"
-                  sx={{ bgcolor: "white", pr: "5px" }}
-                >
-                  Category
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={category}
-                  label="Category"
-                  onChange={(event) => {
-                    setCategory(event.target.value);
-                  }}
-                >
-                  {[
-                    "Fruit",
-                    "Meat",
-                    "Seafood",
-                    "Vegetable",
-                    "Dairy Product",
-                    "Carb & Grain",
-                  ].map((cat) => (
-                    <MenuItem value={cat}>{cat}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-            <Box
-              mb={2}
-              sx={{ display: "flex", gap: "10px", alignItems: "center" }}
-            >
-              {image ? (
-                <>
-                  <img src={API_URL + image} width="100px" />
-                  <Button
-                    color="info"
-                    variant="contained"
-                    size="small"
-                    onClick={() => setImage(null)}
+      <Box sx={{ bgcolor: "#f8f8f8", minHeight: "85vh" }}>
+        <Box
+          sx={{
+            height: "85vh",
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
+          <Container maxWidth="sm">
+            <Paper variant="outlined" sx={{ p: 2, py: 4 }}>
+              <Typography variant="h4" align="center" sx={{ mb: 3 }}>
+                Update Ingredient
+              </Typography>
+              <Box mb={2}>
+                <TextField
+                  label="Name"
+                  color="#000000"
+                  fullWidth
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </Box>
+              <Box mb={2}>
+                <FormControl sx={{ width: "100%" }} color="#000000">
+                  <InputLabel
+                    id="demo-simple-select-label"
+                    sx={{ bgcolor: "white", pr: "5px" }}
                   >
-                    Remove
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<CloudUploadIcon />}
-                >
-                  Upload image
-                  <VisuallyHiddenInput
-                    type="file"
-                    onChange={async (event) => {
-                      const data = await uploadImage(event.target.files[0]);
-                      // { image_url: "uploads/image.jpg" }
-                      // set the image url into state
-                      setImage(data.image_url);
+                    Category
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={category}
+                    label="Category"
+                    onChange={(event) => {
+                      setCategory(event.target.value);
                     }}
-                    accept="image/*"
-                  />
-                </Button>
-              )}
-            </Box>
-            <Box mb={2}>
+                  >
+                    {[
+                      "Fruit",
+                      "Meat",
+                      "Seafood",
+                      "Vegetable",
+                      "Dairy Product",
+                      "Carb & Grain",
+                    ].map((cat) => (
+                      <MenuItem value={cat}>{cat}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+              <Box
+                mb={2}
+                sx={{ display: "flex", gap: "10px", alignItems: "center" }}
+              >
+                {image ? (
+                  <>
+                    <img src={API_URL + image} width="100px" />
+                    <Button
+                      color="error"
+                      variant="outlined"
+                      size="small"
+                      onClick={() => setImage(null)}
+                    >
+                      Remove
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    component="label"
+                    role={undefined}
+                    variant="outlined"
+                    color="warning"
+                    tabIndex={-1}
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    Upload image
+                    <VisuallyHiddenInput
+                      type="file"
+                      onChange={async (event) => {
+                        const data = await uploadImage(event.target.files[0]);
+                        // { image_url: "uploads/image.jpg" }
+                        // set the image url into state
+                        setImage(data.image_url);
+                      }}
+                      accept="image/*"
+                    />
+                  </Button>
+                )}
+              </Box>
               <Button
                 variant="contained"
-                color="primary"
+                color="warning"
                 fullWidth
                 onClick={handleFormSubmit}
               >
                 Update
               </Button>
-            </Box>
-          </Paper>
-        </Container>
+            </Paper>
+          </Container>
+        </Box>
       </Box>
     </>
   );

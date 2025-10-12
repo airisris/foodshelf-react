@@ -8,7 +8,12 @@ import Chip from "@mui/material/Chip";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import KitchenIcon from "@mui/icons-material/Kitchen";
+import IconButton from "@mui/material/IconButton";
 import Alert from "@mui/material/Alert";
+import Divider from "@mui/material/Divider";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
 import Swal from "sweetalert2";
 import { API_URL } from "../utils/constants";
 import { toast } from "sonner";
@@ -124,168 +129,194 @@ export default function IngredientsPage() {
   return (
     <>
       <Header current="ingredients" />
-      <Box sx={{ mx: "50px" }}>
+      <Box sx={{ bgcolor: "#f8f8f8", minHeight: "85vh" }}>
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "space-around",
             alignItems: "center",
-            mx: "200px",
           }}
         >
-          <Chip
-            label={"All (" + allIngredients.length + ")"}
-            onClick={() => {
-              setCategory("All");
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "70px",
             }}
-            variant={category === "All" ? "filled" : "outlined"}
-          />
-          {[
-            "Fruit",
-            "Meat",
-            "Seafood",
-            "Vegetable",
-            "Dairy Product",
-            "Carb & Grain",
-          ].map((cat) => (
+          >
             <Chip
-              key={cat}
-              label={
-                cat +
-                " (" +
-                allIngredients.filter((ing) => ing.category === cat).length +
-                ")"
-              }
+              label={"All (" + allIngredients.length + ")"}
               onClick={() => {
-                setCategory(cat);
+                setCategory("All");
               }}
-              variant={category === cat ? "filled" : "outlined"}
+              variant={category === "All" ? "filled" : "outlined"}
+              sx={{ mr: 1 }}
             />
-          ))}
+            {[
+              "Fruit",
+              "Meat",
+              "Seafood",
+              "Vegetable",
+              "Dairy Product",
+              "Carb & Grain",
+            ].map((cat) => (
+              <Chip
+                key={cat}
+                label={
+                  cat +
+                  " (" +
+                  allIngredients.filter((ing) => ing.category === cat).length +
+                  ")"
+                }
+                onClick={() => {
+                  setCategory(cat);
+                }}
+                variant={category === cat ? "filled" : "outlined"}
+                sx={{ mr: 1 }}
+              />
+            ))}
+          </Box>
+
+          {currentuser && currentuser.role === "admin" ? (
+            <Button
+              variant="contained"
+              color="warning"
+              component={Link}
+              to="/ingredients/new"
+            >
+              <AddIcon sx={{ mr: 1 }} /> Ingredient
+            </Button>
+          ) : null}
         </Box>
 
-        <Grid container spacing={1} sx={{ m: 4 }}>
-          {currentuser && currentuser.role === "admin" ? (
-            <Grid
-              size={{ xs: 6, md: 4, lg: 2 }}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Box
-                component={Link}
-                to="/ingredients/new"
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: 150,
-                  height: 150,
-                  borderRadius: "10%",
-                  border: 2,
-                  borderColor: "black",
-                }}
-              >
-                <AddIcon />
-              </Box>
-            </Grid>
-          ) : null}
-
-          {ingredients.length === 0 ? (
-            <Grid
-              size={{ xs: 6, md: 8, lg: 10 }}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Alert severity="info" sx={{ px: 5 }}>
-                No Ingredients Found
-              </Alert>
-            </Grid>
-          ) : (
-            ingredients.map((i) => (
+        <Box sx={{ mx: "50px" }}>
+          <Divider />
+          <Grid container spacing={1} sx={{ m: 4 }}>
+            {ingredients.length === 0 ? (
               <Grid
-                key={i._id}
-                size={{ xs: 6, md: 4, lg: 2 }}
+                size={{ xs: 12 }}
                 sx={{
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Box
-                  component="img"
-                  // image={API_URL + i.image}
-                  src={API_URL + i.image}
+                <Alert severity="info" sx={{ px: 5 }}>
+                  No Ingredients Found
+                </Alert>
+              </Grid>
+            ) : (
+              ingredients.map((i) => (
+                <Grid
+                  key={i._id}
+                  size={{ xs: 6, md: 4, lg: 2 }}
                   sx={{
-                    width: 150,
-                    height: 150,
-                    borderRadius: "10%",
-                    border: 2,
-                    borderColor: "black",
-                  }}
-                />
-                <Box>
-                  {currentuser.role === "admin" ? (
-                    recipe.some((r) =>
-                      r.ingredients.some((ing) => ing._id === i._id)
-                    ) ||
-                    supplies.some((s) =>
-                      s.ingredient.some((ing) => ing._id === i._id)
-                    ) ? (
-                      <Chip label="In-use" />
-                    ) : (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          width: "100%",
-                        }}
-                      >
-                        <Box
-                          component={Link}
-                          to={`/ingredients/${i._id}/edit`}
-                          sx={{ borderRadius: 5 }}
-                        >
-                          <EditIcon fontSize="small" color="info" disabled />
-                        </Box>
-                        <Box
-                          variant="contained"
-                          sx={{ borderRadius: 5 }}
-                          onClick={() => {
-                            handleProductDelete(i._id);
-                          }}
-                        >
-                          <DeleteIcon fontSize="small" color="error" />
-                        </Box>
-                      </Box>
-                    )
-                  ) : null}
-                  {/* .some() returns true if found at least one match */}
-                </Box>
-                <Typography variant="body1" sx={{ mt: 1 }}>
-                  {i.name}
-                </Typography>
-                <Button
-                  variant="contained"
-                  disabled={supply.find((s) =>
-                    s.ingredient.find((ing) => ing._id === i._id)
-                  )}
-                  onClick={() => {
-                    handleAddSupply(i._id);
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
                 >
-                  Add To My Supply
-                </Button>
-              </Grid>
-            ))
-          )}
-        </Grid>
+                  <Card sx={{ position: "relative" }}>
+                    <CardMedia
+                      sx={{ width: 150, height: 150 }}
+                      component="img"
+                      src={API_URL + i.image}
+                    />
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        bottom: 5,
+                        right: 5,
+                      }}
+                    >
+                      {currentuser.role === "admin" ? (
+                        // .some() returns true if found at least one match
+                        recipe.some((r) =>
+                          r.ingredients.some((ing) => ing._id === i._id)
+                        ) ||
+                        supplies.some((s) =>
+                          s.ingredient.some((ing) => ing._id === i._id)
+                        ) ? (
+                          <Chip
+                            label="In-use"
+                            sx={{
+                              bgcolor: "white",
+                              border: 1,
+                              borderColor: "silver",
+                            }}
+                          />
+                        ) : (
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Box
+                              component={Link}
+                              to={`/ingredients/${i._id}/edit`}
+                              sx={{ mr: 1 }}
+                            >
+                              <EditIcon
+                                fontSize="small"
+                                color="info"
+                                disabled
+                              />
+                            </Box>
+                            <Box
+                              variant="contained"
+                              onClick={() => {
+                                handleProductDelete(i._id);
+                              }}
+                            >
+                              <DeleteIcon fontSize="small" color="error" />
+                            </Box>
+                          </Box>
+                        )
+                      ) : (
+                        <IconButton
+                          onClick={() => {
+                            handleAddSupply(i._id);
+                          }}
+                          sx={{
+                            bgcolor: "#FF8C42",
+                            width: "35px",
+                            height: "35px",
+                            borderRadius: "50%",
+                            "&:disabled": {
+                              bgcolor: "#ccc", // grey out when disabled
+                            },
+                            "&:hover": {
+                              bgcolor: "#ff6200ff",
+                            },
+                          }}
+                          disabled={(supply.find((s) =>
+                            s.ingredient.find((ing) => ing._id === i._id)
+                          )) || !token}
+                        >
+                          <KitchenIcon
+                            fontSize="small"
+                            sx={{
+                              color: "white",
+                            }}
+                            disabled={supply.find((s) =>
+                              s.ingredient.find((ing) => ing._id === i._id)
+                            )}
+                          />
+                        </IconButton>
+                      )}
+                    </Box>
+                  </Card>
+                  <Typography variant="body1" sx={{ mt: 1 }}>
+                    {i.name}
+                  </Typography>
+                </Grid>
+              ))
+            )}
+          </Grid>
+        </Box>
       </Box>
     </>
   );

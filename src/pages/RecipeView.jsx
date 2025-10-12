@@ -1,24 +1,20 @@
+import { Link } from "react-router";
 import Header from "../components/Header";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Autocomplete, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
 import Chip from "@mui/material/Chip";
+import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import ClearIcon from "@mui/icons-material/Clear";
 import { styled } from "@mui/material/styles";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useState, useEffect } from "react";
-import { getRecipe, updateRecipe } from "../utils/api_recipes";
+import { getRecipe } from "../utils/api_recipes";
 import { getCategories } from "../utils/api_category";
 import { getIngredients } from "../utils/api_ingredients";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router";
-import { uploadImage } from "../utils/api_image";
 import { API_URL } from "../utils/constants";
 import { useCookies } from "react-cookie";
 
@@ -102,75 +98,112 @@ export default function RecipeView() {
   return (
     <>
       <Header />
-      <Box sx={{ mx: "50px" }}>
-        <Container maxWidth="md">
-          <Paper elevation={2} sx={{ p: 2 }}>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h4" align="center" my={1}>
-                {name}
-              </Typography>
-              {match && <Chip label={match.name} />}
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-around",
-                alignItems: "center",
-                my: 4,
-              }}
-            >
-              <Box
-                component="img"
-                src={API_URL + image}
-                sx={{
-                  width: 300,
-                  height: 200,
-                  borderRadius: "10%",
-                  border: 2,
-                  borderColor: "black",
-                }}
-              />
-              <Typography
-                variant="h6"
-                align="center"
-                sx={{
-                  textAlign: "start",
-                  pr: "50px",
-                }}
+      <Box sx={{ bgcolor: "#f8f8f8", minHeight: "85vh" }}>
+        <Box sx={{ mx: "50px" }}>
+          <Container maxWidth="md">
+            <Box sx={{ py: 1 }}>
+              <Paper
+                variant="outlined"
+                sx={{ position: "relative", p: 4, my: 2 }}
               >
-                Ingredients: <br />{" "}
-                {ingredient.map((ing, index) => (
-                  <Typography key={index}>
-                    {index + 1}. {ing.name}
+                <Box
+                  component={Link}
+                  to="/recipes"
+                  sx={{
+                    position: "absolute",
+                    top: 20,
+                    right: 20,
+                  }}
+                >
+                  <ClearIcon color="error" />
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="h4" align="center" mb={1}>
+                    {name}
                   </Typography>
-                ))}
-              </Typography>
+                  {match && <Chip label={match.name} />}
+                </Box>
+                <Grid container spacing={1} sx={{ m: 4 }}>
+                  <Grid
+                    size={{ xs: 12, md: 12, lg: 6 }}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={API_URL + image}
+                      sx={{
+                        width: 300,
+                        height: 200,
+                        borderRadius: 1,
+                      }}
+                    />
+                  </Grid>
+                  <Grid
+                    size={{ xs: 12, md: 12, lg: 6 }}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Box>
+                      <Typography
+                        variant="h6"
+                        align="center"
+                        sx={{
+                          textDecoration: "underline",
+                          textDecorationColor: "#FF8C42",
+                        }}
+                      >
+                        Ingredients:
+                      </Typography>
+                      {ingredient.map((ing, index) => (
+                        <Typography key={index}>
+                          {index + 1}. {ing.name}
+                        </Typography>
+                      ))}
+                    </Box>
+                  </Grid>
+                </Grid>
+                <Typography
+                  variant="h6"
+                  align="center"
+                  sx={{
+                    textAlign: "start",
+                    textDecoration: "underline",
+                    textDecorationColor: "#FF8C42",
+                  }}
+                >
+                  Instruction:
+                </Typography>
+                <Box align="center" sx={{ textAlign: "start" }}>
+                  {instruction
+                    // split at the numbers eg. 1. 2.
+                    .split(/\d+\.\s*/)
+                    // remove empty string at the start
+                    .filter((i) => i.trim())
+                    // show each step with number
+                    .map((i, index) => (
+                      <Typography key={i}>
+                        {index + 1}. {i}
+                      </Typography>
+                    ))}
+                </Box>
+              </Paper>
             </Box>
-            <Typography variant="h6" align="center" sx={{ textAlign: "start" }}>
-              Instruction:
-            </Typography>
-            <Box align="center" sx={{ textAlign: "start" }}>
-              {instruction
-                // split at the numbers eg. 1. 2.
-                .split(/\d+\.\s*/)
-                // remove empty string at the start
-                .filter((i) => i.trim())
-                // show each step with number
-                .map((i, index) => (
-                  <Typography key={i}>
-                    {index + 1}. {i}
-                  </Typography>
-                ))}
-            </Box>
-          </Paper>
-        </Container>
+          </Container>
+        </Box>
       </Box>
     </>
   );

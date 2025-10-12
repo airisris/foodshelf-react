@@ -10,7 +10,6 @@ import logo from "../assets/logo.png";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-// export default function Header() {
 const Header = (props) => {
   const navigate = useNavigate();
   const { current } = props;
@@ -113,6 +112,7 @@ const Header = (props) => {
             >
               {"Ingredients"}
             </MuiLink>
+            {!currentuser || currentuser.role !== "admin" ? (
             <MuiLink
               href="/supplies"
               sx={{
@@ -130,6 +130,7 @@ const Header = (props) => {
             >
               {"Supplies"}
             </MuiLink>
+            ) : null}
             {currentuser && currentuser.role === "admin" ? (
               <MuiLink
                 href="/categories"

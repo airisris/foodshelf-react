@@ -6,7 +6,12 @@ import Header from "../components/Header";
 import Grid from "@mui/material/Grid";
 import Chip from "@mui/material/Chip";
 import Alert from "@mui/material/Alert";
+import Divider from "@mui/material/Divider";
 import Modal from "@mui/material/Modal";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
 import { Autocomplete, TextField } from "@mui/material";
 import Swal from "sweetalert2";
 import { API_URL } from "../utils/constants";
@@ -76,205 +81,249 @@ export default function SuppliesPage() {
     });
   };
 
-  console.log(supplies);
-
   return (
     <>
       <Header current="supplies" />
-      <Box sx={{ mx: "50px" }}>
+      <Box sx={{ bgcolor: "#f8f8f8", minHeight: "85vh" }}>
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "space-around",
             alignItems: "center",
-            mx: "200px",
           }}
         >
-          <Chip
-            label={"All (" + supplies.flatMap((s) => s.ingredient).length + ")"}
-            onClick={() => {
-              setCategory("All");
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: "70px",
             }}
-            variant={category === "All" ? "filled" : "outlined"}
-          />
-          {[
-            "Fruit",
-            "Meat",
-            "Seafood",
-            "Vegetable",
-            "Dairy Product",
-            "Carb & Grain",
-          ].map((cat) => (
+          >
             <Chip
-              key={cat}
               label={
-                cat +
-                " (" +
-                supplies
-                  .flatMap((s) => s.ingredient)
-                  .filter((ing) => ing.category === cat).length +
-                ")"
+                "All (" + supplies.flatMap((s) => s.ingredient).length + ")"
               }
               onClick={() => {
-                setCategory(cat);
+                setCategory("All");
               }}
-              variant={category === cat ? "filled" : "outlined"}
+              variant={category === "All" ? "filled" : "outlined"}
+              sx={{ mr: 1 }}
             />
-          ))}
+            {[
+              "Fruit",
+              "Meat",
+              "Seafood",
+              "Vegetable",
+              "Dairy Product",
+              "Carb & Grain",
+            ].map((cat) => (
+              <Chip
+                key={cat}
+                label={
+                  cat +
+                  " (" +
+                  supplies
+                    .flatMap((s) => s.ingredient)
+                    .filter((ing) => ing.category === cat).length +
+                  ")"
+                }
+                onClick={() => {
+                  setCategory(cat);
+                }}
+                variant={category === cat ? "filled" : "outlined"}
+                sx={{ mr: 1 }}
+              />
+            ))}
+          </Box>
         </Box>
 
-        <Grid container spacing={1} sx={{ m: 4 }}>
-          {supplies
-            // returns only one big array
-            .flatMap((s) =>
-              s.ingredient.filter(
-                (i) => category === "All" || i.category === category
-              )
-            ).length === 0 ? (
-            <Grid
-              size={{ xs: 12 }}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Alert severity="info" sx={{ px: 5 }}>
-                No Supplies Found
-              </Alert>
-            </Grid>
-          ) : (
-            supplies.map((s) =>
-              s.ingredient
-                .filter((i) => category === "All" || i.category === category)
-                .map((i) => (
-                  <Grid
-                    key={i._id}
-                    size={{ xs: 6, md: 4, lg: 2 }}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      // image={API_URL + i.image}
-                      src={API_URL + i.image}
+        <Box sx={{ mx: "50px" }}>
+          <Divider />
+          <Grid container spacing={1} sx={{ m: 4 }}>
+            {!token ? (
+              <Grid
+                size={{ xs: 12 }}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Alert severity="info" sx={{ px: 5 }}>
+                  Please Login to Use This Page
+                </Alert>
+              </Grid>
+            ) : supplies
+                // returns only one big array
+                .flatMap((s) =>
+                  s.ingredient.filter(
+                    (i) => category === "All" || i.category === category
+                  )
+                ).length === 0 ? (
+              <Grid
+                size={{ xs: 12 }}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Alert severity="info" sx={{ px: 5 }}>
+                  No Supplies Found
+                </Alert>
+              </Grid>
+            ) : (
+              supplies.map((s) =>
+                s.ingredient
+                  .filter((i) => category === "All" || i.category === category)
+                  .map((i) => (
+                    <Grid
+                      key={i._id}
+                      size={{ xs: 6, md: 4, lg: 2 }}
                       sx={{
-                        width: 150,
-                        height: 150,
-                        borderRadius: "10%",
-                        border: 2,
-                        borderColor: "black",
-                      }}
-                    />
-                    <Typography variant="body1" sx={{ mt: 1 }}>
-                      {i.name}
-                    </Typography>
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        console.log("Deleting ingredient:", i._id);
-                        handleRemoveSupply(i._id);
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
                       }}
                     >
-                      Remove
-                    </Button>
-                  </Grid>
-                ))
-            )
-          )}
-        </Grid>
-
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 20,
-            right: 20,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Typography>Filter for Recipes:</Typography>
-          <Button
-            variant="contained"
-            sx={{ mx: 2 }}
-            onClick={() =>
-              handleAllSuppliesNav(
-                supplies.map((s) => s.ingredient.map((ing) => ing._id))
+                      <Card sx={{ position: "relative" }}>
+                        <CardMedia
+                          sx={{ width: 150, height: 150 }}
+                          component="img"
+                          src={API_URL + i.image}
+                        />
+                        <Box
+                          sx={{
+                            position: "absolute",
+                            bottom: 5,
+                            right: 5,
+                          }}
+                        >
+                          <IconButton
+                            onClick={() => {
+                              console.log("Deleting ingredient:", i._id);
+                              handleRemoveSupply(i._id);
+                            }}
+                            sx={{
+                              bgcolor: "rgba(255, 0, 0, 1)",
+                              width: "35px",
+                              height: "35px",
+                              borderRadius: "50%",
+                              "&:hover": {
+                                bgcolor: "#d33",
+                              },
+                            }}
+                          >
+                            <DeleteIcon
+                              fontSize="small"
+                              sx={{ color: "white" }}
+                            />
+                          </IconButton>
+                        </Box>
+                      </Card>
+                      <Typography variant="body1" sx={{ mt: 1 }}>
+                        {i.name}
+                      </Typography>
+                    </Grid>
+                  ))
               )
-            }
-          >
-            All ingredients
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            Select ingredients
-          </Button>
-        </Box>
+            )}
+          </Grid>
 
-        <Modal open={open} onClose={() => setOpen(false)}>
           <Box
             sx={{
               position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              bgcolor: "background.paper",
-              border: "2px solid #000",
-              boxShadow: 24,
-              p: 4,
+              bottom: 20,
+              right: 20,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <Autocomplete
-              multiple
-              options={supplies.flatMap((s) => s.ingredient.map((ing) => ing))}
-              getOptionLabel={(option) => option.name}
-              value={supply}
-              onChange={(e, newValue) => setSupply(newValue)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Ingredients"
-                  placeholder="Search..."
-                />
-              )}
-            />
+            <Typography>Filter for Recipes:</Typography>
+            <Button
+              variant="contained"
+              sx={{ mx: 2 }}
+              onClick={() =>
+                handleAllSuppliesNav(
+                  supplies.map((s) => s.ingredient.map((ing) => ing._id))
+                )
+              }
+              disabled={!token}
+            >
+              All ingredients
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setOpen(true);
+              }}
+              disabled={!token}
+            >
+              Select ingredients
+            </Button>
+          </Box>
+
+          <Modal open={open} onClose={() => setOpen(false)}>
             <Box
               sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "10px",
-                pt: 2,
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                bgcolor: "background.paper",
+                borderRadius: 1,
+                boxShadow: 24,
+                p: 4,
               }}
             >
-              {" "}
-              <Button
-                color="primary"
-                variant="outlined"
-                onClick={() => {
-                  setOpen(false);
+              <Autocomplete
+                multiple
+                options={supplies.flatMap((s) =>
+                  s.ingredient.map((ing) => ing)
+                )}
+                getOptionLabel={(option) => option.name}
+                value={supply}
+                onChange={(e, newValue) => setSupply(newValue)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Ingredients"
+                    placeholder="Search..."
+                  />
+                )}
+              />
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "10px",
+                  pt: 2,
                 }}
               >
-                Close
-              </Button>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => handleAllSuppliesNav(supply.map((s) => s._id))}
-              >
-                Apply Filter
-              </Button>
+                {" "}
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                >
+                  Close
+                </Button>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => handleAllSuppliesNav(supply.map((s) => s._id))}
+                >
+                  Apply Filter
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </Modal>
+          </Modal>
+        </Box>
       </Box>
     </>
   );

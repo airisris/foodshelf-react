@@ -72,7 +72,9 @@ export default function HomePage() {
         </Box>
       </div>
       <Box sx={{ mx: "50px" }}>
-        <Typography variant="h4" sx={{mt: 5}}>Ingredients</Typography>
+        <Typography variant="h4" sx={{ mt: 5 }} className="title">
+          INGREDIENTS
+        </Typography>
         <Grid container spacing={1} sx={{ m: 4 }}>
           <Grid
             size={{ xs: 6, md: 4, lg: 2 }}
@@ -94,7 +96,11 @@ export default function HomePage() {
             />
             <Typography
               variant="body1"
-              sx={{ mt: 1, textDecoration: "underline" }}
+              sx={{
+                mt: 1,
+                textDecoration: "underline",
+                textDecorationColor: "#FF8C42",
+              }}
             >
               Fruit
             </Typography>
@@ -119,7 +125,11 @@ export default function HomePage() {
             />
             <Typography
               variant="body1"
-              sx={{ mt: 1, textDecoration: "underline" }}
+              sx={{
+                mt: 1,
+                textDecoration: "underline",
+                textDecorationColor: "#FF8C42",
+              }}
             >
               Meat
             </Typography>
@@ -144,7 +154,11 @@ export default function HomePage() {
             />
             <Typography
               variant="body1"
-              sx={{ mt: 1, textDecoration: "underline" }}
+              sx={{
+                mt: 1,
+                textDecoration: "underline",
+                textDecorationColor: "#FF8C42",
+              }}
             >
               Seafood
             </Typography>
@@ -169,7 +183,11 @@ export default function HomePage() {
             />
             <Typography
               variant="body1"
-              sx={{ mt: 1, textDecoration: "underline" }}
+              sx={{
+                mt: 1,
+                textDecoration: "underline",
+                textDecorationColor: "#FF8C42",
+              }}
             >
               Vegetable
             </Typography>
@@ -194,7 +212,11 @@ export default function HomePage() {
             />
             <Typography
               variant="body1"
-              sx={{ mt: 1, textDecoration: "underline" }}
+              sx={{
+                mt: 1,
+                textDecoration: "underline",
+                textDecorationColor: "#FF8C42",
+              }}
             >
               Dairy Product
             </Typography>
@@ -219,13 +241,19 @@ export default function HomePage() {
             />
             <Typography
               variant="body1"
-              sx={{ mt: 1, textDecoration: "underline" }}
+              sx={{
+                mt: 1,
+                textDecoration: "underline",
+                textDecorationColor: "#FF8C42",
+              }}
             >
               More
             </Typography>
           </Grid>
         </Grid>
-        <Typography variant="h4" sx={{pt: 3}}>Recipes</Typography>
+        <Typography variant="h4" sx={{ pt: 3 }}>
+          RECIPES
+        </Typography>
         <Grid container spacing={1} sx={{ m: 4 }}>
           <Grid
             size={{ xs: 6, md: 4, lg: 3 }}
