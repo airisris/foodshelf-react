@@ -367,6 +367,7 @@ export default function SuppliesPage() {
                   <TextField
                     {...params}
                     label="Ingredients"
+                    color="#000000"
                     placeholder="Search..."
                   />
                 )}
@@ -381,7 +382,7 @@ export default function SuppliesPage() {
               >
                 {" "}
                 <Button
-                  color="primary"
+                  color="error"
                   variant="outlined"
                   onClick={() => {
                     setOpen(false);
@@ -390,7 +391,7 @@ export default function SuppliesPage() {
                   Close
                 </Button>
                 <Button
-                  color="primary"
+                  color="warning"
                   variant="contained"
                   onClick={() => handleAllSuppliesNav(supply.map((s) => s._id))}
                 >

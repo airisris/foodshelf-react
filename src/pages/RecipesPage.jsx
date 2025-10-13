@@ -71,16 +71,18 @@ export default function RecipesPage() {
     // ingredients=${ingredient}
     const params = new URLSearchParams(location.search);
     const ingredientsFromURL = params.get("ingredients");
-    if (ingredientsFromURL) {
-      // returns array
-      setIngredients(ingredientsFromURL.split(","));
-    } else {
-      setIngredients([]);
-    }
+    // if (ingredientsFromURL) {
+    //   // returns array
+    //   setIngredients(ingredientsFromURL.split(","));
+    // } else {
+    //   setIngredients([]);
+    // }
+    setIngredients(ingredientsFromURL);
   }, [location.search]);
 
   // get all recipes
   useEffect(() => {
+    console.log(category, ingredients);
     getRecipes(category, ingredients).then((data) => {
       setRecipes(data);
     });
@@ -257,7 +259,7 @@ export default function RecipesPage() {
                       >
                         {r.instruction.split(" ").slice(0, 15).join(" ")}...
                       </Typography>
-                      {ingredients.length > 0
+                      {ingredients !== ""
                         ? (() => {
                             // find ingredients that the user doesn't have on each recipes
                             const notMatch = r.ingredients.filter(
