@@ -14,10 +14,9 @@ import LogoutIcon from "@mui/icons-material/Logout";
 const Header = (props) => {
   const navigate = useNavigate();
   const { current } = props;
-  const [cookies, setCookie, removeCookie] = useCookies(["currentuser"]);
+  const [cookies, removeCookie] = useCookies(["currentuser"]);
   const { currentuser } = cookies;
-
-  console.log(current);
+  // const { token = "" } = currentuser;
 
   return (
     <>
@@ -37,6 +36,7 @@ const Header = (props) => {
                 justifyContent: { xs: "center", md: "flex-start" },
               }}
             >
+              {/* FoodShelf logo */}
               <Box
                 component={Link}
                 to="/"
@@ -48,33 +48,35 @@ const Header = (props) => {
               >
                 <img src={logo} width="100" />
               </Box>
-              {currentuser && (
-                <Typography
-                  variant="body1"
-                  align="center"
-                  sx={{
-                    order: { sm: 1, md: 2 },
-                    display: { xs: "none", sm: "block" },
-                  }}
-                >
-                  Welcome, {currentuser.name}
-                </Typography>
-              )}
-              {currentuser ? (
-                <Button
-                  variant="outlined"
-                  color="warning"
-                  onClick={() => {
-                    // remove cookie
-                    removeCookie("currentuser");
-                    // redirect back to home page
-                    navigate("/");
-                  }}
-                  sx={{ mx: 2, order: { sm: 3, md: 3 } }}
-                >
-                  <LogoutIcon sx={{ mr: 1 }} /> Logout
-                </Button>
+              {/* if logged in, show name and logout button only */}
+              {currentuser && currentuser._id ? (
+                <>
+                  <Typography
+                    variant="body1"
+                    align="center"
+                    sx={{
+                      order: { sm: 1, md: 2 },
+                      display: { xs: "none", sm: "block" },
+                    }}
+                  >
+                    Welcome, {currentuser.name}
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    color="warning"
+                    onClick={() => {
+                      // remove cookie
+                      removeCookie("currentuser");
+                      // redirect back to home page
+                      navigate("/");
+                    }}
+                    sx={{ mx: 2, order: { sm: 3, md: 3 } }}
+                  >
+                    <LogoutIcon sx={{ mr: 1 }} /> Logout
+                  </Button>
+                </>
               ) : (
+                // if logged out, show login button only
                 <Button
                   component={Link}
                   to="/login"
@@ -99,8 +101,8 @@ const Header = (props) => {
                 mb: { xs: 2, md: 0 },
               }}
             >
+              {/* recipes nav link */}
               <MuiLink
-                href="/recipes"
                 sx={{
                   marginRight: "8px",
                   color: "black",
@@ -111,13 +113,17 @@ const Header = (props) => {
                   ...(current === "recipes" && {
                     textDecorationColor: "#FF8C42",
                   }),
+                  cursor: "pointer",
                 }}
                 underline="always"
+                onClick={() => {
+                  navigate(`/recipes?category=All`);
+                }}
               >
                 {"Recipes"}
               </MuiLink>
+              {/* ingredients nav link */}
               <MuiLink
-                href="/ingredients"
                 sx={{
                   marginRight: "8px",
                   color: "black",
@@ -128,11 +134,16 @@ const Header = (props) => {
                   ...(current === "ingredients" && {
                     textDecorationColor: "#FF8C42",
                   }),
+                  cursor: "pointer",
                 }}
                 underline="always"
+                onClick={() => {
+                  navigate(`/ingredients?category=All`);
+                }}
               >
                 {"Ingredients"}
               </MuiLink>
+              {/* if not admin, show supplies nav link */}
               {!currentuser || currentuser.role !== "admin" ? (
                 <MuiLink
                   href="/supplies"
@@ -152,6 +163,7 @@ const Header = (props) => {
                   {"Supplies"}
                 </MuiLink>
               ) : null}
+              {/* if admin, show categories nav link */}
               {currentuser && currentuser.role === "admin" ? (
                 <MuiLink
                   href="/categories"

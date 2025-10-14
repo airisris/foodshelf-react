@@ -32,18 +32,18 @@ export default function IngredientAdd() {
   const [image, setImage] = useState(null);
 
   const handleFormSubmit = async (event) => {
-    // 1. check for error
+    // check for error
     if (!name || !category || !image) {
       toast.error("Please fill up the required fields");
       return;
     }
 
     try {
-      // 2. trigger the API to create new product
+      // trigger the API to create new ingredient
       await addIngredient(name, category, image, token);
-      // 3. if successful, redirect user back to home page and show success message
+      // if successful, redirect user and show success message
       toast.success("New ingredient has been added");
-      navigate("/ingredients");
+      navigate("/ingredients?category=All");
     } catch (error) {
       console.log(error.message);
     }
@@ -61,11 +61,13 @@ export default function IngredientAdd() {
     width: 1,
   });
 
+  // if not admin, show:
   if (!currentuser || currentuser.role !== "admin") {
     return (
       <>
         <Header />
         <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          {/* only admin can access to this page */}
           <Alert align="center" severity="error">
             You Shall Not Pass
           </Alert>
@@ -83,6 +85,7 @@ export default function IngredientAdd() {
     );
   }
 
+  // if admin, show:
   return (
     <>
       <Header />
@@ -103,7 +106,7 @@ export default function IngredientAdd() {
             >
               <Box
                 component={Link}
-                to="/ingredients"
+                to="/ingredients?category=All"
                 sx={{
                   position: "absolute",
                   top: 20,
@@ -115,6 +118,7 @@ export default function IngredientAdd() {
               <Typography variant="h4" align="center" sx={{ mb: 3 }}>
                 Add New Ingredient
               </Typography>
+              {/* ingredient name */}
               <Box mb={2}>
                 <TextField
                   label="Name"
@@ -124,6 +128,7 @@ export default function IngredientAdd() {
                   onChange={(e) => setName(e.target.value)}
                 />
               </Box>
+              {/* ingredient category */}
               <Box mb={2}>
                 <FormControl sx={{ width: "100%" }} color="#000000">
                   <InputLabel
@@ -147,7 +152,7 @@ export default function IngredientAdd() {
                       "Seafood",
                       "Vegetable",
                       "Dairy Product",
-                      "Carb & Grain",
+                      "Carb and Grain",
                       "Other",
                     ].map((cat) => (
                       <MenuItem value={cat}>{cat}</MenuItem>
@@ -155,6 +160,7 @@ export default function IngredientAdd() {
                   </Select>
                 </FormControl>
               </Box>
+              {/* ingredient image */}
               <Box
                 mb={2}
                 sx={{ display: "flex", gap: "10px", alignItems: "center" }}

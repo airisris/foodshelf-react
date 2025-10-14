@@ -18,7 +18,7 @@ import bg from "../assets/bg.jpg";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies(["currentuser"]);
+  const [cookies, setCookie] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies;
   const { token = "" } = currentuser;
   const [email, setEmail] = useState("");
@@ -32,7 +32,7 @@ const LoginPage = () => {
       // make sure the email is valid
       toast.error("Please use a valid email address");
     } else {
-      // do sign up
+      // do login
       try {
         // login user
         const userData = await logIn(email, password);
@@ -43,17 +43,18 @@ const LoginPage = () => {
         toast.success("You have successfully logged in");
         navigate("/");
       } catch (error) {
-        console.log(error);
         console.log(error.response.data.message);
       }
     }
   };
 
+  // if user already logged in, show:
   if (token) {
     return (
       <>
         <Header />
         <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          {/* logged in users cannot access this page */}
           <Alert align="center" severity="error">
             You Shall Not Pass
           </Alert>
@@ -71,6 +72,7 @@ const LoginPage = () => {
     );
   }
 
+  // if user is logged out, show:
   return (
     <>
       <Header />
@@ -96,6 +98,7 @@ const LoginPage = () => {
               <Typography variant="h4" align="center" sx={{ mb: 3 }}>
                 Welcome Back!
               </Typography>
+              {/* user email */}
               <Box mb={2}>
                 <TextField
                   label="Email"
@@ -106,6 +109,7 @@ const LoginPage = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </Box>
+              {/* user password */}
               <Box mb={2}>
                 <TextField
                   label="Password"
@@ -137,6 +141,7 @@ const LoginPage = () => {
                   mt: 3,
                 }}
               >
+                {/* navigate to sign up if user got no account */}
                 <Typography>Doesn't have an account yet?</Typography>
                 <MuiLink
                   href="/signup"

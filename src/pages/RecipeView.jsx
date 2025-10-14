@@ -7,6 +7,7 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import Alert from "@mui/material/Alert";
 import ClearIcon from "@mui/icons-material/Clear";
 import { styled } from "@mui/material/styles";
 import { useState, useEffect } from "react";
@@ -29,16 +30,13 @@ export default function RecipeView() {
   const [category, setCategory] = useState("");
   const [ingredient, setIngredient] = useState([]);
   const [image, setImage] = useState(null);
+  // to store data from /categories
   const [categories, setCategories] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
 
+  // get all categories
   useEffect(() => {
     getCategories().then((data) => setCategories(data));
   }, []);
-
-  useEffect(() => {
-    getIngredients("All").then((data) => setIngredients(data));
-  }, [category]);
 
   // load the recipe data from the backend API, and assign it the state
   useEffect(() => {
@@ -53,7 +51,7 @@ export default function RecipeView() {
           setIngredient(recipeData ? recipeData.ingredients : []);
           setImage(recipeData ? recipeData.image : null);
         } else {
-          // if not availabke, set error message
+          // if not available, set error message
           setError("Recipe not found");
         }
       })
@@ -83,11 +81,17 @@ export default function RecipeView() {
       <>
         <Header />
         <Container maxWidth="sm" sx={{ textAlign: "center" }}>
-          <Typography variant="h4" align="center" mb={2} color="error">
+          <Alert align="center" severity="error">
             {error}
-          </Typography>
-          <Button variant="contained" color="primary" component={Link} to="/">
-            Go back to home
+          </Alert>
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
+            to="/"
+            sx={{ mt: 2 }}
+          >
+            Go Back
           </Button>
         </Container>
       </>
@@ -107,7 +111,7 @@ export default function RecipeView() {
               >
                 <Box
                   component={Link}
-                  to="/recipes"
+                  to="/recipes?category=All"
                   sx={{
                     position: "absolute",
                     top: 20,
@@ -124,9 +128,11 @@ export default function RecipeView() {
                     alignItems: "center",
                   }}
                 >
+                  {/* recipe name */}
                   <Typography variant="h4" align="center" mb={1}>
                     {name}
                   </Typography>
+                  {/* recipe category */}
                   {match && <Chip label={match.name} />}
                 </Box>
                 <Grid container spacing={1} sx={{ m: 4 }}>
@@ -138,6 +144,7 @@ export default function RecipeView() {
                       justifyContent: "center",
                     }}
                   >
+                    {/* recipe image */}
                     <Box
                       component="img"
                       src={API_URL + image}
@@ -157,6 +164,7 @@ export default function RecipeView() {
                     }}
                   >
                     <Box>
+                      {/* recipe ingredient */}
                       <Typography
                         variant="h6"
                         align="center"
@@ -175,6 +183,7 @@ export default function RecipeView() {
                     </Box>
                   </Grid>
                 </Grid>
+                {/* recipe instruction */}
                 <Typography
                   variant="h6"
                   align="center"
@@ -188,7 +197,7 @@ export default function RecipeView() {
                 </Typography>
                 <Box align="center" sx={{ textAlign: "start" }}>
                   {instruction
-                    // split at the numbers eg. 1. 2.
+                    // split at the numbers ex: 1. 2.
                     .split(/\d+\.\s*/)
                     // remove empty string at the start
                     .filter((i) => i.trim())

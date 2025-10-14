@@ -24,79 +24,61 @@ import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { getRecipes, deleteRecipe } from "../utils/api_recipes";
 import { getCategories } from "../utils/api_category";
-import { getIngredients } from "../utils/api_ingredients";
+import { useNavigate } from "react-router";
 
 export default function RecipesPage() {
+  const navigate = useNavigate();
   const location = useLocation();
   const [cookies] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
-  const { email, token = "" } = currentuser;
-  const [category, setCategory] = useState("All");
-  const [ingredients, setIngredients] = useState([]);
-  const [allIngredients, setAllIngredients] = useState([]);
+  const { token = "" } = currentuser;
   // to store data from /recipes
   const [recipes, setRecipes] = useState([]);
   const [allRecipes, setAllRecipes] = useState([]);
   // to store data from /categories
   const [categories, setCategories] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+
+  const params = new URLSearchParams(location.search);
+  // read category from url
+  const categoryFromURL = params.get("category");
+  // read ingredient from url
+  const ingredientsFromURL = params.get("ingredients");
 
   // get all categories
   useEffect(() => {
     getCategories().then((data) => setCategories(data));
   }, []);
 
-  // get all ingredients
-  useEffect(() => {
-    getIngredients("All").then((data) => setAllIngredients(data));
-  }, []);
-
-  // read category from url
-  useEffect(() => {
-    // category=${category}
-    const params = new URLSearchParams(location.search);
-    const categoryFromURL = params.get("category");
-
-    if (categoryFromURL && categories.length > 0) {
-      const match = categories.find((cat) => cat.name === categoryFromURL);
-      if (match) {
-        setCategory(match._id);
-      }
-    } else {
-      setCategory("All");
-    }
-  }, [location.search, categories]);
-
-  // read ingredient from url
-  useEffect(() => {
-    // ingredients=${ingredient}
-    const params = new URLSearchParams(location.search);
-    const ingredientsFromURL = params.get("ingredients");
-    // if (ingredientsFromURL) {
-    //   // returns array
-    //   setIngredients(ingredientsFromURL.split(","));
-    // } else {
-    //   setIngredients([]);
-    // }
-    setIngredients(ingredientsFromURL);
-  }, [location.search]);
-
   // get all recipes
   useEffect(() => {
-    console.log(category, ingredients);
-    getRecipes(category, ingredients).then((data) => {
+    getRecipes(categoryFromURL, ingredientsFromURL).then((data) => {
       setRecipes(data);
+      setLoaded(true);
     });
-  }, [category, ingredients]);
+  }, [categoryFromURL, ingredientsFromURL]);
 
-  // get all recipes
+  // get all recipes with "All" category
   useEffect(() => {
     getRecipes("All", []).then((data) => {
       setAllRecipes(data);
     });
   }, []);
 
-  console.log("Fetching recipes:" + recipes);
-  console.log("Fetching recipes with:", { category, ingredients });
+  const handleCatNav = async (category) => {
+    try {
+      // navigate to ingredients page with applied category filter
+      if (ingredientsFromURL) {
+        navigate(
+          `/recipes?category=${category}&ingredients=${ingredientsFromURL}`
+        );
+      } else {
+        navigate(`/recipes?category=${category}`);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   const handleProductDelete = async (id) => {
     Swal.fire({
@@ -113,15 +95,16 @@ export default function RecipesPage() {
         // delete recipe at the backend
         await deleteRecipe(id, token);
         // get the new data from the backend
-        const updatedRecipes = await getRecipes(category, ingredients);
+        const updatedRecipes = await getRecipes(
+          categoryFromURL,
+          ingredientsFromURL
+        );
         setRecipes(updatedRecipes);
 
         toast.success("Recipe has been deleted");
       }
     });
   };
-
-  console.log(token);
 
   return (
     <>
@@ -152,18 +135,18 @@ export default function RecipesPage() {
             }}
           >
             <SwiperSlide style={{ width: "auto" }}>
+              {/* "All" category chip */}
               <Chip
                 label={"All (" + allRecipes.length + ")"}
-                onClick={() => {
-                  setCategory("All");
-                }}
-                variant={category === "All" ? "filled" : "outlined"}
+                onClick={() => handleCatNav("All")}
+                variant={categoryFromURL === "All" ? "filled" : "outlined"}
                 sx={{ mr: 1 }}
               />
             </SwiperSlide>
 
             {categories.map((cat) => (
               <SwiperSlide style={{ width: "auto" }}>
+                {/* other categories chip */}
                 <Chip
                   key={cat._id}
                   label={
@@ -173,15 +156,14 @@ export default function RecipesPage() {
                       .length +
                     ")"
                   }
-                  onClick={() => {
-                    setCategory(cat._id);
-                  }}
-                  variant={category === cat._id ? "filled" : "outlined"}
+                  onClick={() => handleCatNav(cat._id)}
+                  variant={categoryFromURL === cat._id ? "filled" : "outlined"}
                   sx={{ mr: 1 }}
                 />
               </SwiperSlide>
             ))}
           </Swiper>
+          {/* if admin, show add recipe button */}
           {currentuser && currentuser.role === "admin" ? (
             <Button
               variant="contained"
@@ -200,6 +182,7 @@ export default function RecipesPage() {
         <Box sx={{ mx: { xs: "10px", sm: "50px" } }}>
           <Divider />
           <Grid container spacing={1} sx={{ m: 4 }}>
+            {/* if recipes is empty, show: */}
             {recipes.length === 0 ? (
               <Grid
                 size={{ xs: 12 }}
@@ -214,6 +197,7 @@ export default function RecipesPage() {
                 </Alert>
               </Grid>
             ) : (
+              // if recipes is not empty, show:
               recipes.map((r) => (
                 <Grid
                   key={r._id}
@@ -233,6 +217,7 @@ export default function RecipesPage() {
                       minHeight: 300,
                     }}
                   >
+                    {/* recipe image */}
                     <CardMedia
                       sx={{ height: 200 }}
                       // image={API_URL + r.image}
@@ -240,30 +225,34 @@ export default function RecipesPage() {
                       src={API_URL + r.image}
                     />
                     <CardContent>
+                      {/* recipe name */}
                       <Typography variant="h5" component="div" sx={{ mb: 1 }}>
                         {r.name}
                       </Typography>
-                      {category === "All" ? (
+                      {/* recipe category */}
+                      {categoryFromURL === "All" ? (
                         <Chip
                           size="small"
                           label={
                             categories.find((cat) => cat._id === r.category._id)
-                              .name
+                              ?.name
                           }
                           sx={{ mb: 2 }}
                         />
                       ) : null}
+                      {/* recipe instruction */}
                       <Typography
                         variant="body2"
                         sx={{ color: "text.secondary" }}
                       >
                         {r.instruction.split(" ").slice(0, 15).join(" ")}...
                       </Typography>
-                      {ingredients !== ""
+                      {/* missing ingredient alert */}
+                      {ingredientsFromURL !== null
                         ? (() => {
                             // find ingredients that the user doesn't have on each recipes
                             const notMatch = r.ingredients.filter(
-                              (ing) => !ingredients.includes(ing._id)
+                              (ing) => !ingredientsFromURL?.includes(ing._id)
                             );
 
                             // if have, display them
@@ -275,8 +264,10 @@ export default function RecipesPage() {
                                 </Alert>
                               );
                             }
-                          })()
-                        : // immediately calling the function
+                          })
+                          // immediately calling the function
+                          ()
+                        : 
                           null}
                     </CardContent>
                     <CardActions
@@ -286,6 +277,7 @@ export default function RecipesPage() {
                         alignItems: "center",
                       }}
                     >
+                      {/* view recipe */}
                       <Button
                         component={Link}
                         color="warning"
@@ -295,6 +287,7 @@ export default function RecipesPage() {
                       >
                         View Recipe
                       </Button>
+                      {/* if admin, show: */}
                       {currentuser.role === "admin" ? (
                         <Box
                           sx={{
@@ -303,6 +296,7 @@ export default function RecipesPage() {
                             alignItems: "center",
                           }}
                         >
+                          {/* edit recipe */}
                           <Box
                             component={Link}
                             to={`/recipes/${r._id}/edit`}
@@ -311,6 +305,7 @@ export default function RecipesPage() {
                           >
                             <EditIcon fontSize="small" color="info" />
                           </Box>
+                          {/* delete recipe */}
                           <Box
                             variant="contained"
                             sx={{ borderRadius: 5 }}

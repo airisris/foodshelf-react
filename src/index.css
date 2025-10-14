@@ -5,12 +5,13 @@ body {
 .arrow {
   text-align: center;
 }
+
+/* arrow animations */
 .bounce {
   -moz-animation: bounce 2s infinite;
   -webkit-animation: bounce 2s infinite;
   animation: bounce 2s infinite;
 }
-
 @keyframes bounce {
   0%,
   20%,
@@ -27,6 +28,7 @@ body {
   }
 }
 
+/* embla slider default styling, used for the banner carousel */
 .embla {
   overflow: hidden;
 }
@@ -38,25 +40,38 @@ body {
   min-width: 0;
 }
 
+/* recipes nav from home page */
 .nav {
   opacity: 1;
   transition: 0.3s;
   cursor: pointer;
 }
-
 .nav:hover {
   opacity: 0.6;
 }
 
-.title {
-  box-shadow: inset 0 0 0 0 #f4511e;
+/* ingredient title styling on the home page */
+.title-ing {
+  box-shadow: inset 0 0 0 0 #ff8c42;
   color: "black";
   margin: 0 -0.25rem;
   padding: 0 0.25rem;
   transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
+.title-ing:hover {
+  box-shadow: inset 245px 0 0 0 #ff8c42;
+  color: white;
+}
 
-.title:hover {
-  box-shadow: inset 225px 0 0 0 #f4511e;
+/* recipe title styling on the home page */
+.title-rec {
+  box-shadow: inset 0 0 0 0 #ff8c42;
+  color: "black";
+  margin: 0 -0.25rem;
+  padding: 0 0.25rem;
+  transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.title-rec:hover {
+  box-shadow: inset 160px 0 0 0 #ff8c42;
   color: white;
 }

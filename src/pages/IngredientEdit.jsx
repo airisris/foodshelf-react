@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Autocomplete, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
@@ -44,7 +44,7 @@ export default function IngredientEdit() {
           setCategory(ingredientData ? ingredientData.category : "");
           setImage(ingredientData ? ingredientData.image : null);
         } else {
-          // if not availabke, set error message
+          // if not available, set error message
           console.log("Ingredient not found");
         }
       })
@@ -55,18 +55,18 @@ export default function IngredientEdit() {
   }, [id]);
 
   const handleFormSubmit = async (event) => {
-    // 1. check for error
+    // check for error
     if (!name || !category || !image) {
       toast.error("Please fill up the required fields");
       return;
     }
 
     try {
-      // 2. trigger the API to create new ingredient
+      // trigger the API to update ingredient
       await updateIngredient(id, name, category, image, token);
-      // 3. if successful, redirect user and show success message
+      // if successful, redirect user and show success message
       toast.success("Ingredient has been updated");
-      navigate("/ingredients");
+      navigate("/ingredients?category=All");
     } catch (error) {
       console.log(error.message);
     }
@@ -84,11 +84,13 @@ export default function IngredientEdit() {
     width: 1,
   });
 
+  // if not admin, show:
   if (!currentuser || currentuser.role !== "admin") {
     return (
       <>
         <Header />
         <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          {/* only admin can access to this page */}
           <Alert align="center" severity="error">
             You Shall Not Pass
           </Alert>
@@ -106,6 +108,7 @@ export default function IngredientEdit() {
     );
   }
 
+  // if admin, show:
   return (
     <>
       <Header />
@@ -126,7 +129,7 @@ export default function IngredientEdit() {
             >
               <Box
                 component={Link}
-                to="/ingredients"
+                to="/ingredients?category=All"
                 sx={{
                   position: "absolute",
                   top: 20,
@@ -138,6 +141,7 @@ export default function IngredientEdit() {
               <Typography variant="h4" align="center" sx={{ mb: 3 }}>
                 Update Ingredient
               </Typography>
+              {/* ingredient name */}
               <Box mb={2}>
                 <TextField
                   label="Name"
@@ -147,6 +151,7 @@ export default function IngredientEdit() {
                   onChange={(e) => setName(e.target.value)}
                 />
               </Box>
+              {/* ingredient category */}
               <Box mb={2}>
                 <FormControl sx={{ width: "100%" }} color="#000000">
                   <InputLabel
@@ -170,7 +175,7 @@ export default function IngredientEdit() {
                       "Seafood",
                       "Vegetable",
                       "Dairy Product",
-                      "Carb & Grain",
+                      "Carb and Grain",
                       "Other",
                     ].map((cat) => (
                       <MenuItem value={cat}>{cat}</MenuItem>
@@ -178,6 +183,7 @@ export default function IngredientEdit() {
                   </Select>
                 </FormControl>
               </Box>
+              {/* ingredient image */}
               <Box
                 mb={2}
                 sx={{ display: "flex", gap: "10px", alignItems: "center" }}

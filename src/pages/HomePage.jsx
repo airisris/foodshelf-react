@@ -1,9 +1,6 @@
-import { Link } from "react-router";
-import { Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Header from "../components/Header";
-import Grid from "@mui/material/Grid";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import KeyboardDoubleArrowDownIcon from "@mui/icons-material/KeyboardDoubleArrowDown";
@@ -19,19 +16,24 @@ import dessert from "../assets/dessert.png";
 import moreFood from "../assets/moreFood.png";
 import bannerWaste from "../assets/bannerWaste.png";
 import bannerDiwali from "../assets/bannerDiwali.png";
+import IngredientsNav from "../components/IngredientsNav";
+import RecipesNav from "../components/RecipesNav";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
-import { useState, useEffect } from "react";
-import { useCookies } from "react-cookie";
-import { getIngredients } from "../utils/api_ingredients";
 import { useNavigate } from "react-router";
+import { getCategories } from "../utils/api_category";
+import { useState, useEffect } from "react";
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [emblaRef] = useEmblaCarousel({ loop: false }, [Autoplay()]);
-  const [cookies] = useCookies(["currentuser"]);
-  const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
-  const { token = "" } = currentuser;
+  // to store data from /categories
+  const [categories, setCategories] = useState([]);
+
+  // get all categories
+  useEffect(() => {
+    getCategories().then((data) => setCategories(data));
+  }, []);
 
   const handleIngredientsNav = async (category) => {
     try {
@@ -44,8 +46,15 @@ export default function HomePage() {
 
   const handleRecipesNav = async (category) => {
     try {
-      // navigate to ingredients page with applied category filter
-      navigate(`/recipes?category=${category}`);
+      if (category !== "All") {
+        // get the id of the category
+        const match = categories.find((cat) => cat.name === category)._id;
+        // navigate to ingredients page with applied category filter
+        navigate(`/recipes?category=${match}`);
+      } else {
+        // navigate to ingredients page with applied category "All" filter
+        navigate(`/recipes?category=${category}`);
+      }
     } catch (error) {
       console.log(error.message);
     }
@@ -54,6 +63,7 @@ export default function HomePage() {
   return (
     <>
       <Header />
+      {/* banner carousel */}
       <div className="embla" ref={emblaRef}>
         <div className="embla__container">
           <Box
@@ -74,7 +84,7 @@ export default function HomePage() {
         </Box>
       </div>
       <Box sx={{ mx: { xs: "10px", sm: "50px" } }}>
-        <Typography variant="h4" sx={{ mt: 5 }} className="title">
+        <Typography variant="h4" sx={{ mt: 5 }} className="title-ing">
           INGREDIENTS
         </Typography>
         <Box
@@ -87,6 +97,7 @@ export default function HomePage() {
             px: { xs: 2, md: 6 },
           }}
         >
+          {/* swiperjs component */}
           <Swiper
             slidesPerView="auto"
             spaceBetween={10}
@@ -100,198 +111,65 @@ export default function HomePage() {
               "--swiper-pagination-color": "#FF8C42",
             }}
           >
+            {/* fruit ingredients nav */}
             <SwiperSlide style={{ width: "auto" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={fruit}
-                  sx={{
-                    width: { xs: 150, sm: 170 },
-                    height: { xs: 100, sm: 120 },
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleIngredientsNav("Fruit")}
-                />
-                <Typography
-                  variant="body1"
-                  sx={{
-                    mt: 1,
-                    textDecoration: "underline",
-                    textDecorationColor: "#FF8C42",
-                  }}
-                >
-                  Fruit
-                </Typography>
-              </Box>
+              <IngredientsNav
+                image={fruit}
+                onIngredientsNav={handleIngredientsNav}
+                category={"Fruit"}
+              />
             </SwiperSlide>
 
+            {/* meat ingredients nav */}
             <SwiperSlide style={{ width: "auto" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={meat}
-                  sx={{
-                    width: { xs: 150, sm: 170 },
-                    height: { xs: 100, sm: 120 },
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleIngredientsNav("Meat")}
-                />
-                <Typography
-                  variant="body1"
-                  sx={{
-                    mt: 1,
-                    textDecoration: "underline",
-                    textDecorationColor: "#FF8C42",
-                  }}
-                >
-                  Meat
-                </Typography>
-              </Box>
+              <IngredientsNav
+                image={meat}
+                onIngredientsNav={handleIngredientsNav}
+                category={"Meat"}
+              />
             </SwiperSlide>
 
+            {/* seafood ingredients nav */}
             <SwiperSlide style={{ width: "auto" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={seafood}
-                  sx={{
-                    width: { xs: 150, sm: 170 },
-                    height: { xs: 100, sm: 120 },
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleIngredientsNav("Seafood")}
-                />
-                <Typography
-                  variant="body1"
-                  sx={{
-                    mt: 1,
-                    textDecoration: "underline",
-                    textDecorationColor: "#FF8C42",
-                  }}
-                >
-                  Seafood
-                </Typography>
-              </Box>
+              <IngredientsNav
+                image={seafood}
+                onIngredientsNav={handleIngredientsNav}
+                category={"Seafood"}
+              />
             </SwiperSlide>
 
+            {/* vegetable ingredients nav */}
             <SwiperSlide style={{ width: "auto" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={vege}
-                  sx={{
-                    width: { xs: 150, sm: 170 },
-                    height: { xs: 100, sm: 120 },
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleIngredientsNav("Vegetable")}
-                />
-                <Typography
-                  variant="body1"
-                  sx={{
-                    mt: 1,
-                    textDecoration: "underline",
-                    textDecorationColor: "#FF8C42",
-                  }}
-                >
-                  Vegetable
-                </Typography>
-              </Box>
+              <IngredientsNav
+                image={vege}
+                onIngredientsNav={handleIngredientsNav}
+                category={"Vegetable"}
+              />
             </SwiperSlide>
 
+            {/* dairy product ingredients nav */}
             <SwiperSlide style={{ width: "auto" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={dairy}
-                  sx={{
-                    width: { xs: 150, sm: 170 },
-                    height: { xs: 100, sm: 120 },
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleIngredientsNav("Dairy Product")}
-                />
-                <Typography
-                  variant="body1"
-                  sx={{
-                    mt: 1,
-                    textDecoration: "underline",
-                    textDecorationColor: "#FF8C42",
-                  }}
-                >
-                  Dairy Product
-                </Typography>
-              </Box>
+              <IngredientsNav
+                image={dairy}
+                onIngredientsNav={handleIngredientsNav}
+                category={"Dairy Product"}
+              />
             </SwiperSlide>
 
+            {/* all ingredients nav */}
             <SwiperSlide style={{ width: "auto" }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  component="img"
-                  src={more}
-                  sx={{
-                    width: { xs: 150, sm: 170 },
-                    height: { xs: 100, sm: 120 },
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleIngredientsNav("All")}
-                />
-                <Typography
-                  variant="body1"
-                  sx={{
-                    mt: 1,
-                    textDecoration: "underline",
-                    textDecorationColor: "#FF8C42",
-                  }}
-                >
-                  More
-                </Typography>
-              </Box>
+              <IngredientsNav
+                image={more}
+                onIngredientsNav={handleIngredientsNav}
+                category={"All"}
+              />
             </SwiperSlide>
           </Swiper>
         </Box>
 
-        <Typography variant="h4" sx={{ pt: 3 }}>
+        <Typography variant="h4" sx={{ mt: 3, mb: 1 }} className="title-rec">
           RECIPES
         </Typography>
-        {/* <Grid container spacing={1} sx={{ m: 4 }}> */}
         <Box
           sx={{
             display: "flex",
@@ -302,6 +180,7 @@ export default function HomePage() {
             px: { xs: 2, md: 6 },
           }}
         >
+          {/* swiperjs component */}
           <Swiper
             slidesPerView="auto"
             spaceBetween={10}
@@ -315,101 +194,43 @@ export default function HomePage() {
               "--swiper-pagination-color": "#FF8C42",
             }}
           >
+            {/* breakfast recipes nav */}
             <SwiperSlide style={{ width: "auto" }}>
-              <Box
-                size={{ xs: 6, md: 4, lg: 3 }}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  className="nav"
-                  component="img"
-                  src={breakfast}
-                  sx={{
-                    width: 250,
-                    height: 300,
-                    borderRadius: 1,
-                  }}
-                  onClick={() => handleRecipesNav("Breakfast")}
-                />
-              </Box>
+              <RecipesNav
+                image={breakfast}
+                onRecipesNav={handleRecipesNav}
+                category={"Breakfast"}
+              />
             </SwiperSlide>
 
+            {/* main course recipes nav */}
             <SwiperSlide style={{ width: "auto" }}>
-              <Box
-                size={{ xs: 6, md: 4, lg: 3 }}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  className="nav"
-                  component="img"
-                  src={mainCourse}
-                  sx={{
-                    width: 250,
-                    height: 300,
-                    borderRadius: 1,
-                  }}
-                  onClick={() => handleRecipesNav("Main Course")}
-                />
-              </Box>
+              <RecipesNav
+                image={mainCourse}
+                onRecipesNav={handleRecipesNav}
+                category={"Main Course"}
+              />
             </SwiperSlide>
 
+            {/* dessert recipes nav */}
             <SwiperSlide style={{ width: "auto" }}>
-              <Box
-                size={{ xs: 6, md: 4, lg: 3 }}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  className="nav"
-                  component="img"
-                  src={dessert}
-                  sx={{
-                    width: 250,
-                    height: 300,
-                    borderRadius: 1,
-                  }}
-                  onClick={() => handleRecipesNav("Dessert")}
-                />
-              </Box>
+              <RecipesNav
+                image={dessert}
+                onRecipesNav={handleRecipesNav}
+                category={"Dessert"}
+              />
             </SwiperSlide>
 
+            {/* all recipes nav */}
             <SwiperSlide style={{ width: "auto" }}>
-              <Box
-                size={{ xs: 6, md: 4, lg: 3 }}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box
-                  className="nav"
-                  component="img"
-                  src={moreFood}
-                  sx={{
-                    width: 250,
-                    height: 300,
-                    borderRadius: 1,
-                  }}
-                  onClick={() => handleRecipesNav("All")}
-                />
-              </Box>
+              <RecipesNav
+                image={moreFood}
+                onRecipesNav={handleRecipesNav}
+                category={"All"}
+              />
             </SwiperSlide>
           </Swiper>
         </Box>
-
-        {/* </Grid> */}
       </Box>
     </>
   );

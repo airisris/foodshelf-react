@@ -31,31 +31,27 @@ import {
 } from "../utils/api_ingredients";
 import { getRecipes } from "../utils/api_recipes";
 import { getAllSupplies, addSupply, getSupplies } from "../utils/api_supplies";
+import { useNavigate } from "react-router";
 
 export default function IngredientsPage() {
+  const navigate = useNavigate();
   const location = useLocation();
   const [cookies] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies; // assign empty object to avoid error if user not logged in
   const { email, token = "" } = currentuser;
-  const [category, setCategory] = useState("All");
   const [search, setSearch] = useState("");
-  const [supply, setSupply] = useState([]);
-  const [recipe, setRecipe] = useState([]);
   // to store data from /ingredients
   const [ingredients, setIngredients] = useState([]);
   const [allIngredients, setAllIngredients] = useState([]);
+  // to store data from /supplies
+  const [supply, setSupply] = useState([]);
   const [supplies, setSupplies] = useState([]);
+  // to store data from /recipes
+  const [recipe, setRecipe] = useState([]);
 
   // read category from url
-  useEffect(() => {
-    // category=${category}
-    const params = new URLSearchParams(location.search);
-    const categoryFromURL = params.get("category");
-
-    if (categoryFromURL) {
-      setCategory(categoryFromURL);
-    }
-  }, [location.search]);
+  const params = new URLSearchParams(location.search);
+  const categoryFromURL = params.get("category");
 
   // get all ingredients with any category
   useEffect(() => {
@@ -66,10 +62,10 @@ export default function IngredientsPage() {
 
   // get all ingredients
   useEffect(() => {
-    getIngredients(search, category).then((data) => {
+    getIngredients(search, categoryFromURL).then((data) => {
       setIngredients(data);
     });
-  }, [search, category]);
+  }, [search, categoryFromURL]);
 
   // get all supplies
   useEffect(() => {
@@ -102,12 +98,12 @@ export default function IngredientsPage() {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
-      // once user confirm, then we delete the ingredient
+      // once user confirm, delete the ingredient
       if (result.isConfirmed) {
         // delete ingredient at the backend
         await deleteIngredient(id, token);
         // get the new data from the backend
-        const updatedProducts = await getIngredients(category);
+        const updatedProducts = await getIngredients(search, categoryFromURL);
         setIngredients(updatedProducts);
 
         toast.success("Ingredient has been deleted");
@@ -120,6 +116,7 @@ export default function IngredientsPage() {
       const ingredient = await getIngredient(id);
       // add to supply
       await addSupply(email, ingredient, token);
+      // get the updated supplies
       const updatedSupplies = await getSupplies(token);
       setSupply(updatedSupplies);
       const allSupplies = await getAllSupplies(token);
@@ -130,7 +127,14 @@ export default function IngredientsPage() {
     }
   };
 
-  console.log(ingredients);
+  // ingredients category navigation
+  const handleCatNav = async (category) => {
+    try {
+      navigate(`/ingredients?category=${category}`);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <>
@@ -143,6 +147,7 @@ export default function IngredientsPage() {
             alignItems: "center",
           }}
         >
+          {/* search filter */}
           <TextField
             size="small"
             placeholder="Search"
@@ -182,24 +187,26 @@ export default function IngredientsPage() {
             }}
           >
             <SwiperSlide style={{ width: "auto" }}>
+              {/* "All" category */}
               <Chip
                 label={"All (" + allIngredients.length + ")"}
                 onClick={() => {
-                  setCategory("All");
+                  handleCatNav("All");
                 }}
-                variant={category === "All" ? "filled" : "outlined"}
+                variant={categoryFromURL === "All" ? "filled" : "outlined"}
                 sx={{ mr: 1 }}
               />
             </SwiperSlide>
 
             <SwiperSlide style={{ width: "auto" }}>
+              {/* other categories */}
               {[
                 "Fruit",
                 "Meat",
                 "Seafood",
                 "Vegetable",
                 "Dairy Product",
-                "Carb & Grain",
+                "Carb and Grain",
                 "Other",
               ].map((cat) => (
                 <Chip
@@ -212,15 +219,16 @@ export default function IngredientsPage() {
                     ")"
                   }
                   onClick={() => {
-                    setCategory(cat);
+                    handleCatNav(cat);
                   }}
-                  variant={category === cat ? "filled" : "outlined"}
+                  variant={categoryFromURL === cat ? "filled" : "outlined"}
                   sx={{ mr: 1 }}
                 />
               ))}
             </SwiperSlide>
           </Swiper>
 
+          {/* if admin, show add ingredient button */}
           {currentuser && currentuser.role === "admin" ? (
             <Button
               variant="contained"
@@ -239,6 +247,7 @@ export default function IngredientsPage() {
         <Box sx={{ mx: { xs: "10px", sm: "50px" } }}>
           <Divider />
           <Grid container spacing={1} sx={{ m: 4 }}>
+            {/* if ingredients empty, show: */}
             {ingredients.length === 0 ? (
               <Grid
                 size={{ xs: 12 }}
@@ -253,6 +262,7 @@ export default function IngredientsPage() {
                 </Alert>
               </Grid>
             ) : (
+              // if ingredients not empty, show:
               ingredients.map((i) => (
                 <Grid
                   key={i._id}
@@ -276,6 +286,7 @@ export default function IngredientsPage() {
                         right: 5,
                       }}
                     >
+                      {/* if admin, show: */}
                       {currentuser.role === "admin" ? (
                         // .some() returns true if found at least one match
                         recipe.some((r) =>
@@ -284,6 +295,7 @@ export default function IngredientsPage() {
                         supplies.some((s) =>
                           s.ingredient.some((ing) => ing._id === i._id)
                         ) ? (
+                          // show this if ingredient is used in recipe or someone's supply
                           <Chip
                             label="In-use"
                             sx={{
@@ -293,6 +305,7 @@ export default function IngredientsPage() {
                             }}
                           />
                         ) : (
+                          // show this if ingredient is not used
                           <Box
                             sx={{
                               display: "flex",
@@ -300,6 +313,7 @@ export default function IngredientsPage() {
                               alignItems: "center",
                             }}
                           >
+                            {/* edit ingredient */}
                             <Box
                               component={Link}
                               to={`/ingredients/${i._id}/edit`}
@@ -311,6 +325,7 @@ export default function IngredientsPage() {
                                 disabled
                               />
                             </Box>
+                            {/* delete ingredient */}
                             <Box
                               variant="contained"
                               onClick={() => {
@@ -322,6 +337,7 @@ export default function IngredientsPage() {
                           </Box>
                         )
                       ) : (
+                        // if not admin, show add to supply button
                         <IconButton
                           onClick={() => {
                             handleAddSupply(i._id);
@@ -332,7 +348,7 @@ export default function IngredientsPage() {
                             height: "35px",
                             borderRadius: "50%",
                             "&:disabled": {
-                              bgcolor: "#ccc", // grey out when disabled
+                              bgcolor: "#ccc",
                             },
                             "&:hover": {
                               bgcolor: "#ff6200ff",
@@ -344,6 +360,7 @@ export default function IngredientsPage() {
                             ) || !token
                           }
                         >
+                          {/* add ingredient to supply button */}
                           <KitchenIcon
                             fontSize="small"
                             sx={{
@@ -360,7 +377,8 @@ export default function IngredientsPage() {
                   <Typography variant="body1" sx={{ mt: 1 }}>
                     {i.name}
                   </Typography>
-                  {category === "All" ? (
+                  {/* if category is All, show ingredient category */}
+                  {categoryFromURL === "All" ? (
                     <Chip size="small" label={i.category} sx={{ my: 1 }} />
                   ) : null}
                 </Grid>

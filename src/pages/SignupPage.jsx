@@ -18,7 +18,7 @@ import bg2 from "../assets/bg2.jpg";
 
 const SignupPage = () => {
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies(["currentuser"]);
+  const [cookies, setCookie] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies;
   const { token = "" } = currentuser;
   const [name, setName] = useState("");
@@ -27,7 +27,7 @@ const SignupPage = () => {
   const [cPassword, setCPassword] = useState("");
 
   const handleSignUp = async () => {
-    // make sure the name and email fields are not empty
+    // check for error
     if (!name || !email || !password || !cPassword) {
       toast.error("Please fill up all the the fields");
     } else if (!validator.validate(email)) {
@@ -54,11 +54,13 @@ const SignupPage = () => {
     }
   };
 
+  // if user already logged in, show:
   if (token) {
     return (
       <>
         <Header />
         <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          {/* logged in users cannot access this page */}
           <Alert align="center" severity="error">
             You Shall Not Pass
           </Alert>
@@ -76,6 +78,7 @@ const SignupPage = () => {
     );
   }
 
+  // if user is logged out, show:
   return (
     <>
       <Header />
@@ -101,6 +104,7 @@ const SignupPage = () => {
               <Typography variant="h4" align="center" sx={{ mb: 3 }}>
                 Create An Account
               </Typography>
+              {/* user name */}
               <Box mb={2}>
                 <TextField
                   label="Name"
@@ -111,6 +115,7 @@ const SignupPage = () => {
                   onChange={(e) => setName(e.target.value)}
                 />
               </Box>
+              {/* user email */}
               <Box mb={2}>
                 <TextField
                   label="Email"
@@ -121,6 +126,7 @@ const SignupPage = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </Box>
+              {/* user password */}
               <Box mb={2}>
                 <TextField
                   label="Password"
@@ -132,6 +138,7 @@ const SignupPage = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </Box>
+              {/* user confirm password */}
               <Box mb={2}>
                 <TextField
                   label="Confirm Password"
@@ -163,6 +170,7 @@ const SignupPage = () => {
                   mt: 3,
                 }}
               >
+                {/* navigate to log in if user got an account */}
                 <Typography>Already have an account?</Typography>
                 <MuiLink
                   href="/login"

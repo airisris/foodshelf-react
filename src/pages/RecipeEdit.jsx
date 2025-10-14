@@ -35,15 +35,19 @@ export default function RecipeEdit() {
   const [category, setCategory] = useState("");
   const [ingredient, setIngredient] = useState([]);
   const [image, setImage] = useState(null);
+  // to store data from /categories
   const [categories, setCategories] = useState([]);
+  // to store data from /ingredients
   const [ingredients, setIngredients] = useState([]);
 
+  // get all categories
   useEffect(() => {
     getCategories().then((data) => setCategories(data));
   }, []);
 
+  // get all ingredients
   useEffect(() => {
-    getIngredients("All").then((data) => setIngredients(data));
+    getIngredients("", "All").then((data) => setIngredients(data));
   }, [category]);
 
   // load the recipe data from the backend API, and assign it the state
@@ -70,14 +74,14 @@ export default function RecipeEdit() {
   }, [id]);
 
   const handleFormSubmit = async (event) => {
-    // 1. check for error
+    // check for error
     if (!name || !instruction || !category || !ingredient || !image) {
       toast.error("Please fill up the required fields");
       return;
     }
 
     try {
-      // 2. trigger the API to create new recipe
+      // trigger the API to create new recipe
       await updateRecipe(
         id,
         name,
@@ -87,9 +91,9 @@ export default function RecipeEdit() {
         image,
         token
       );
-      // 3. if successful, redirect user and show success message
+      // if successful, redirect user and show success message
       toast.success("Recipe has been updated");
-      navigate("/recipes");
+      navigate("/recipes?category=All");
     } catch (error) {
       console.log(error.message);
     }
@@ -107,11 +111,13 @@ export default function RecipeEdit() {
     width: 1,
   });
 
+  // if not admin, show:
   if (!currentuser || currentuser.role !== "admin") {
     return (
       <>
         <Header />
         <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          {/* only admin can access to this page */}
           <Alert align="center" severity="error">
             You Shall Not Pass
           </Alert>
@@ -129,6 +135,7 @@ export default function RecipeEdit() {
     );
   }
 
+  // if admin, show:
   return (
     <>
       <Header />
@@ -142,7 +149,7 @@ export default function RecipeEdit() {
               >
                 <Box
                   component={Link}
-                  to="/recipes"
+                  to="/recipes?category=All"
                   sx={{
                     position: "absolute",
                     top: 20,
@@ -154,6 +161,7 @@ export default function RecipeEdit() {
                 <Typography variant="h4" align="center" sx={{ mb: 3 }}>
                   Update Recipe
                 </Typography>
+                {/* update recipe name */}
                 <Box mb={2}>
                   <TextField
                     label="Name"
@@ -163,6 +171,7 @@ export default function RecipeEdit() {
                     onChange={(e) => setName(e.target.value)}
                   />
                 </Box>
+                {/* update recipe instruction */}
                 <Box mb={2}>
                   <TextField
                     label="Instruction"
@@ -174,6 +183,7 @@ export default function RecipeEdit() {
                     onChange={(e) => setInstruction(e.target.value)}
                   />
                 </Box>
+                {/* update recipe category */}
                 <Box mb={2}>
                   <FormControl sx={{ width: "100%" }} color="#000000">
                     <InputLabel
@@ -197,6 +207,7 @@ export default function RecipeEdit() {
                     </Select>
                   </FormControl>
                 </Box>
+                {/* update recipe ingredient */}
                 <Box mb={2}>
                   <Autocomplete
                     multiple
@@ -214,6 +225,7 @@ export default function RecipeEdit() {
                     )}
                   />
                 </Box>
+                {/* update recipe image */}
                 <Box
                   mb={2}
                   sx={{ display: "flex", gap: "10px", alignItems: "center" }}

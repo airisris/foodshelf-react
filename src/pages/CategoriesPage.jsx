@@ -1,7 +1,6 @@
 import { Link } from "react-router";
 import Header from "../components/Header";
 import { Container } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
@@ -32,14 +31,16 @@ import Alert from "@mui/material/Alert";
 export default function CategoriesPage() {
   const [cookies] = useCookies(["currentuser"]);
   const { currentuser = {} } = cookies;
-  const { email, token = "" } = currentuser;
-  const [categories, setCategories] = useState("");
   const [name, setName] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedCatID, setSelectedCatID] = useState("");
   const [selectedCatName, setSelectedCatName] = useState("");
-  const [recipe, setRecipe] = useState([]);
+  // to store data from /categories
+  const [categories, setCategories] = useState("");
+  // to store data from /ingredients
   const [ingredients, setIngredients] = useState([]);
+  // to store data from /recipes
+  const [recipe, setRecipe] = useState([]);
 
   // get all categories
   useEffect(() => {
@@ -54,7 +55,7 @@ export default function CategoriesPage() {
 
   // get all ingredients
   useEffect(() => {
-    getIngredients("All").then((data) => {
+    getIngredients("", "All").then((data) => {
       setIngredients(data);
     });
   }, []);
@@ -93,7 +94,7 @@ export default function CategoriesPage() {
     const newCategories = await getCategories();
     // update the categories state
     setCategories(newCategories);
-    // close the model
+    // close the modal
     setOpen(false);
     toast.info("Category has been updated");
   };
@@ -109,7 +110,9 @@ export default function CategoriesPage() {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       if (result.isConfirmed) {
+        // delete category
         await deleteCategory(id);
+        // get latest categories
         const updatedCategories = await getCategories();
         setCategories(updatedCategories);
         toast.success("Category has been removed");
@@ -117,11 +120,13 @@ export default function CategoriesPage() {
     });
   };
 
+  // if not admin, show:
   if (!currentuser || currentuser.role !== "admin") {
     return (
       <>
         <Header />
         <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          {/* only admin can access to this page */}
           <Alert align="center" severity="error">
             You Shall Not Pass
           </Alert>
@@ -139,6 +144,7 @@ export default function CategoriesPage() {
     );
   }
 
+  // if admin, show:
   return (
     <>
       <Header current="categories" />
@@ -157,6 +163,7 @@ export default function CategoriesPage() {
                   p: 2,
                 }}
               >
+                {/* add new category */}
                 <TextField
                   label="Category Name"
                   color="#000000"
@@ -186,6 +193,7 @@ export default function CategoriesPage() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
+                  {/* if no categories exist */}
                   {categories.length === 0 ? (
                     <TableRow
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -195,6 +203,7 @@ export default function CategoriesPage() {
                       </TableCell>
                     </TableRow>
                   ) : (
+                    // if categories exist
                     categories.map((c) => (
                       <TableRow key={c._id}>
                         <TableCell component="th" scope="row">
@@ -207,6 +216,7 @@ export default function CategoriesPage() {
                             gap: "10px",
                           }}
                         >
+                          {/* edit category */}
                           <Button
                             variant="outlined"
                             color="primary"
@@ -222,6 +232,7 @@ export default function CategoriesPage() {
                           >
                             <EditIcon fontSize="small" sx={{ mr: 1 }} /> Edit
                           </Button>
+                          {/* delete category */}
                           <Button
                             variant="outlined"
                             color="error"
@@ -242,6 +253,7 @@ export default function CategoriesPage() {
                 </TableBody>
               </Table>
             </TableContainer>
+            {/* edit category modal */}
             <Modal open={open} onClose={() => setOpen(false)}>
               <Box
                 sx={{
@@ -256,6 +268,7 @@ export default function CategoriesPage() {
                   p: 4,
                 }}
               >
+                {/* update category name */}
                 <TextField
                   fullWidth
                   label="Category"

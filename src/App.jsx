@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { Toaster } from "sonner";
 import { CookiesProvider } from "react-cookie";
 
+// import all pages
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";

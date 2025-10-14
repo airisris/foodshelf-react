@@ -23,7 +23,6 @@ import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { getSupplies, deleteSupply } from "../utils/api_supplies";
-import { getIngredients } from "../utils/api_ingredients";
 import { useNavigate } from "react-router";
 
 export default function SuppliesPage() {
@@ -34,17 +33,9 @@ export default function SuppliesPage() {
   const [open, setOpen] = useState(false);
   const [supply, setSupply] = useState([]);
   const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
   // to store data from /supplies
   const [supplies, setSupplies] = useState([]);
-  const [category, setCategory] = useState("All");
-  const [allIngredients, setAllIngredients] = useState([]);
-
-  // get all ingredients
-  useEffect(() => {
-    getIngredients(search, "All").then((data) => {
-      setAllIngredients(data);
-    });
-  }, [search]);
 
   // get all supplies
   useEffect(() => {
@@ -73,7 +64,7 @@ export default function SuppliesPage() {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, remove it!",
     }).then(async (result) => {
-      // once user confirm, then we remove the ingredient
+      // once user confirm, remove the ingredient
       if (result.isConfirmed) {
         // delete supply at the backend
         await deleteSupply(email, ingredient, token);
@@ -86,11 +77,13 @@ export default function SuppliesPage() {
     });
   };
 
+  // if admin, show:
   if (currentuser && currentuser.role === "admin") {
     return (
       <>
         <Header />
         <Container maxWidth="xs" sx={{ textAlign: "center" }}>
+          {/* admin cannot access to this page */}
           <Alert align="center" severity="error">
             You Shall Not Pass
           </Alert>
@@ -108,6 +101,7 @@ export default function SuppliesPage() {
     );
   }
 
+  // if not admin, show:
   return (
     <>
       <Header current="supplies" />
@@ -119,6 +113,7 @@ export default function SuppliesPage() {
             alignItems: "center",
           }}
         >
+          {/* search filter */}
           <TextField
             size="small"
             placeholder="Search"
@@ -156,6 +151,7 @@ export default function SuppliesPage() {
               "--swiper-pagination-color": "#FF8C42",
             }}
           >
+            {/* "All" category chip */}
             <SwiperSlide style={{ width: "auto" }}>
               <Chip
                 label={
@@ -169,6 +165,7 @@ export default function SuppliesPage() {
               />
             </SwiperSlide>
 
+            {/* other categories chip */}
             <SwiperSlide style={{ width: "auto" }}>
               {[
                 "Fruit",
@@ -176,7 +173,7 @@ export default function SuppliesPage() {
                 "Seafood",
                 "Vegetable",
                 "Dairy Product",
-                "Carb & Grain",
+                "Carb and Grain",
                 "Other",
               ].map((cat) => (
                 <Chip
@@ -203,6 +200,7 @@ export default function SuppliesPage() {
         <Box sx={{ mx: { xs: "10px", sm: "50px" }, pb: 6 }}>
           <Divider />
           <Grid container spacing={1} sx={{ m: 4 }}>
+            {/* if user not logged in, show: */}
             {!token ? (
               <Grid
                 size={{ xs: 12 }}
@@ -216,13 +214,14 @@ export default function SuppliesPage() {
                   Please Login to Use This Page
                 </Alert>
               </Grid>
-            ) : supplies
+            ) : // if user is logged in, show:
+            supplies
                 // returns only one big array
                 .flatMap((s) =>
                   s.ingredient.filter(
                     (i) => category === "All" || i.category === category
                   )
-                ).length === 0 ? (
+                ).length === 0 ? ( // if supplies is empty, show:
               <Grid
                 size={{ xs: 12 }}
                 sx={{
@@ -236,10 +235,12 @@ export default function SuppliesPage() {
                 </Alert>
               </Grid>
             ) : (
+              // if supplies is not empty, show:
               supplies.map((s) =>
                 s.ingredient
                   .filter(
                     (i) =>
+                      // filter by category
                       (category === "All" || i.category === category) &&
                       // search filter
                       i.name.toLowerCase().includes(search.toLowerCase())
@@ -255,6 +256,7 @@ export default function SuppliesPage() {
                       }}
                     >
                       <Card sx={{ position: "relative" }}>
+                        {/* supply image */}
                         <CardMedia
                           sx={{ width: 150, height: 150 }}
                           component="img"
@@ -267,6 +269,7 @@ export default function SuppliesPage() {
                             right: 5,
                           }}
                         >
+                          {/* supply remove */}
                           <IconButton
                             onClick={() => {
                               console.log("Deleting ingredient:", i._id);
@@ -289,9 +292,11 @@ export default function SuppliesPage() {
                           </IconButton>
                         </Box>
                       </Card>
+                      {/* supply name */}
                       <Typography variant="body1" sx={{ mt: 1 }}>
                         {i.name}
                       </Typography>
+                      {/* if category "All", show supply category */}
                       {category === "All" ? (
                         <Chip size="small" label={i.category} sx={{ my: 1 }} />
                       ) : null}
@@ -316,6 +321,7 @@ export default function SuppliesPage() {
             }}
           >
             <Typography>Filter for Recipes:</Typography>
+            {/* filter with all ingredients in supply page */}
             <Button
               variant="outlined"
               color="warning"
@@ -325,22 +331,26 @@ export default function SuppliesPage() {
                   supplies.map((s) => s.ingredient.map((ing) => ing._id))
                 )
               }
+              // disable if user not logged in
               disabled={!token}
             >
               All ingredients
             </Button>
+            {/* filter with selected ingredients */}
             <Button
               variant="contained"
               color="warning"
               onClick={() => {
                 setOpen(true);
               }}
+              // disable if user not logged in
               disabled={!token}
             >
               Select ingredients
             </Button>
           </Box>
 
+          {/* modal for selecting ingredient */}
           <Modal open={open} onClose={() => setOpen(false)}>
             <Box
               sx={{
@@ -357,9 +367,9 @@ export default function SuppliesPage() {
             >
               <Autocomplete
                 multiple
-                options={supplies.flatMap((s) =>
-                  s.ingredient.map((ing) => ing)
-                )}
+                options={supplies
+                  // map through an array of ingredients
+                  .flatMap((s) => s.ingredient.map((ing) => ing))}
                 getOptionLabel={(option) => option.name}
                 value={supply}
                 onChange={(e, newValue) => setSupply(newValue)}
