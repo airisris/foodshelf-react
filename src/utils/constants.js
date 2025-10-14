@@ -1,1 +1,2 @@
-export const API_URL = "http://localhost:5123/";
+export const API_URL = import.meta.env.DEV ?
+"http://localhost:5123/api/" : "https://b15-airis.mak3r.dev/api/";
