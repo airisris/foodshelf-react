@@ -43,7 +43,7 @@ const LoginPage = () => {
         toast.success("You have successfully logged in");
         navigate("/");
       } catch (error) {
-        console.log(error.response.data.message);
+        toast.error(error.response.data.message);
       }
     }
   };

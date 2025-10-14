@@ -275,7 +275,10 @@ export default function IngredientsPage() {
                 >
                   <Card sx={{ position: "relative" }}>
                     <CardMedia
-                      sx={{ width: 150, height: 150 }}
+                      sx={{
+                        width: { xs: 130, sm: 150 },
+                        height: { xs: 130, sm: 150 },
+                      }}
                       component="img"
                       src={API_URL + i.image}
                     />

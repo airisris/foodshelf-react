@@ -258,7 +258,10 @@ export default function SuppliesPage() {
                       <Card sx={{ position: "relative" }}>
                         {/* supply image */}
                         <CardMedia
-                          sx={{ width: 150, height: 150 }}
+                          sx={{
+                            width: { xs: 130, sm: 150 },
+                            height: { xs: 130, sm: 150 },
+                          }}
                           component="img"
                           src={API_URL + i.image}
                         />
@@ -358,7 +361,7 @@ export default function SuppliesPage() {
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: 400,
+                width: { xs: 300, sm: 400 },
                 bgcolor: "background.paper",
                 borderRadius: 1,
                 boxShadow: 24,

@@ -59,7 +59,7 @@ body {
   transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 .title-ing:hover {
-  box-shadow: inset 245px 0 0 0 #ff8c42;
+  box-shadow: inset 225px 0 0 0 #ff8c42;
   color: white;
 }
 
@@ -72,6 +72,6 @@ body {
   transition: color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 .title-rec:hover {
-  box-shadow: inset 160px 0 0 0 #ff8c42;
+  box-shadow: inset 145px 0 0 0 #ff8c42;
   color: white;
 }
