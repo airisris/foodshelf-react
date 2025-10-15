@@ -100,6 +100,8 @@ export default function RecipesPage() {
           ingredientsFromURL
         );
         setRecipes(updatedRecipes);
+        const updatedAllRecipes = await getRecipes("All", []);
+        setAllRecipes(updatedAllRecipes);
 
         toast.success("Recipe has been deleted");
       }
@@ -264,10 +266,8 @@ export default function RecipesPage() {
                                 </Alert>
                               );
                             }
-                          })
-                          // immediately calling the function
-                          ()
-                        : 
+                          })()
+                        : // immediately calling the function
                           null}
                     </CardContent>
                     <CardActions

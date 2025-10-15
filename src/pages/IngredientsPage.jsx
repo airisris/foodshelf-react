@@ -103,8 +103,13 @@ export default function IngredientsPage() {
         // delete ingredient at the backend
         await deleteIngredient(id, token);
         // get the new data from the backend
-        const updatedProducts = await getIngredients(search, categoryFromURL);
-        setIngredients(updatedProducts);
+        const updatedIngredients = await getIngredients(
+          search,
+          categoryFromURL
+        );
+        setIngredients(updatedIngredients);
+        const updatedAllIngredients = await getIngredients("", "All");
+        setAllIngredients(updatedAllIngredients);
 
         toast.success("Ingredient has been deleted");
       }
