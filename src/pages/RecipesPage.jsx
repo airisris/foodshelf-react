@@ -284,6 +284,14 @@ export default function RecipesPage() {
                         variant="outlined"
                         to={`/recipes/${r._id}`}
                         size="small"
+                        onClick={() => {
+                          // set local storage to save the url (with the ingredient ids if got)
+                          localStorage.setItem(
+                            "prevRecipesURL",
+                            window.location.pathname + // /recipes
+                              window.location.search // the filter (what goes after ?)
+                          );
+                        }}
                       >
                         View Recipe
                       </Button>

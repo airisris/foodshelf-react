@@ -40,7 +40,6 @@ export default function SuppliesPage() {
   // get all supplies
   useEffect(() => {
     getSupplies(token).then((data) => {
-      console.log("Supplies data:", data);
       setSupplies(data);
     });
   }, []);
@@ -219,7 +218,11 @@ export default function SuppliesPage() {
                 // returns only one big array
                 .flatMap((s) =>
                   s.ingredient.filter(
-                    (i) => category === "All" || i.category === category
+                    (i) =>
+                      // filter by category
+                      (category === "All" || i.category === category) &&
+                      // search filter
+                      i.name.toLowerCase().includes(search.toLowerCase())
                   )
                 ).length === 0 ? ( // if supplies is empty, show:
               <Grid

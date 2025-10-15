@@ -110,8 +110,11 @@ export default function RecipeView() {
                 sx={{ position: "relative", p: 4, my: 2 }}
               >
                 <Box
-                  component={Link}
-                  to="/recipes?category=All"
+                  onClick={() => {
+                    // get url from the local storage
+                    const prevURL = localStorage.getItem("prevRecipesURL");
+                    navigate(prevURL);
+                  }}
                   sx={{
                     position: "absolute",
                     top: 20,
