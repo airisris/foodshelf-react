@@ -272,6 +272,7 @@ export default function CategoriesPage() {
                 <TextField
                   fullWidth
                   label="Category"
+                  color="#000000"
                   variant="outlined"
                   value={selectedCatName}
                   onChange={(event) => setSelectedCatName(event.target.value)}
@@ -295,7 +296,7 @@ export default function CategoriesPage() {
                     Cancel
                   </Button>
                   <Button
-                    color="primary"
+                    color="warning"
                     variant="contained"
                     onClick={handleUpdate}
                   >
