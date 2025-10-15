@@ -33,7 +33,7 @@ export default function IngredientAdd() {
 
   const handleFormSubmit = async (event) => {
     // check for error
-    if (!name || !category || !image) {
+    if (!name.trim() || !category || !image) {
       toast.error("Please fill up the required fields");
       return;
     }
@@ -121,11 +121,12 @@ export default function IngredientAdd() {
               {/* ingredient name */}
               <Box mb={2}>
                 <TextField
-                  label="Name"
+                  label="Name (max. 15)"
                   color="#000000"
                   fullWidth
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  slotProps={{ htmlInput: { maxLength: 15 } }}
                 />
               </Box>
               {/* ingredient category */}

@@ -69,8 +69,10 @@ export default function CategoriesPage() {
 
   const handleSubmit = async () => {
     // check for error
-    if (!name) {
+    // if name is empty after .trim() return error
+    if (!name.trim()) {
       toast.error("Please fill up the name");
+      return;
     }
 
     try {
@@ -88,6 +90,12 @@ export default function CategoriesPage() {
   };
 
   const handleUpdate = async () => {
+    // check for error
+    if (!selectedCatName.trim()) {
+      toast.error("Please fill up the name");
+      return;
+    }
+
     // update category
     await updateCategory(selectedCatID, selectedCatName);
     // get the latest categories again
@@ -165,11 +173,12 @@ export default function CategoriesPage() {
               >
                 {/* add new category */}
                 <TextField
-                  label="Category Name"
+                  label="Category Name (max. 15)"
                   color="#000000"
                   fullWidth
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  slotProps={{ htmlInput: { maxLength: 15 } }}
                 />
                 <Button
                   color="warning"
@@ -271,11 +280,12 @@ export default function CategoriesPage() {
                 {/* update category name */}
                 <TextField
                   fullWidth
-                  label="Category"
+                  label="Category Name (max. 15)"
                   color="#000000"
                   variant="outlined"
                   value={selectedCatName}
                   onChange={(event) => setSelectedCatName(event.target.value)}
+                  slotProps={{ htmlInput: { maxLength: 15 } }}
                 />
                 <Box
                   sx={{

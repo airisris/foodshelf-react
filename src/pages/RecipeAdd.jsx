@@ -50,9 +50,31 @@ export default function RecipeAdd() {
   }, [category]);
 
   const handleFormSubmit = async (event) => {
-    // check for error
-    if (!name || !instruction || !category || !ingredient || !image) {
+    // check for errors
+    // check if any fields are empty
+    if (
+      !name.trim() ||
+      !instruction.trim() ||
+      !category ||
+      ingredient.length === 0 ||
+      !image
+    ) {
       toast.error("Please fill up the required fields");
+      return;
+    }
+    // return arrays of word and if one of the word's length is more than 20, show error
+    if (name.split(/\s+/).some((word) => word.length > 20)) {
+      toast.error("Please enter a valid name");
+      return;
+    }
+    if (instruction.split(/\s+/).some((word) => word.length > 20)) {
+      toast.error("Please enter a valid instruction");
+      return;
+    }
+    // check if instruction provided has number
+    // .test() checks if given pattern (1. 2.) is found in the string
+    if (!/\b\d+\./.test(instruction)) {
+      toast.error("Please provide numbered steps");
       return;
     }
 
@@ -139,11 +161,12 @@ export default function RecipeAdd() {
                 {/* recipe name */}
                 <Box mb={2}>
                   <TextField
-                    label="Name"
+                    label="Name (max. 30)"
                     color="#000000"
                     fullWidth
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    slotProps={{ htmlInput: { maxLength: 30 } }}
                   />
                 </Box>
                 {/* recipe instruction */}
