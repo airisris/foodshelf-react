@@ -28,7 +28,7 @@ const SignupPage = () => {
 
   const handleSignUp = async () => {
     // check for error
-    if (!name || !email || !password || !cPassword) {
+    if (!name.trim() || !email || !password || !cPassword) {
       toast.error("Please fill up all the the fields");
     } else if (!validator.validate(email)) {
       // make sure the email is valid
@@ -107,12 +107,13 @@ const SignupPage = () => {
               {/* user name */}
               <Box mb={2}>
                 <TextField
-                  label="Name"
+                  label="Name (max. 15)"
                   color="#000000"
                   variant="outlined"
                   fullWidth
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  slotProps={{ htmlInput: { maxLength: 15 } }}
                 />
               </Box>
               {/* user email */}
